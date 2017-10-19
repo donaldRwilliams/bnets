@@ -1,4 +1,5 @@
 #' @export
+#' @import rstan
 #' @useDynLib bnets, .registration = TRUE
 bridge_net <- function(X, prior_scale = 1, chains = 4, models = 1,
                        scale_seq = scale_seq, iter = 2000,
@@ -27,7 +28,7 @@ bridge_net <- function(X, prior_scale = 1, chains = 4, models = 1,
   if(models == 1){
     stan_dat <- list(N = N, K = K, X = X, prior_scale = prior_scale)
     # fit model
-    mod_fit   <- sampling(stanmodels$ridge, data = stan_dat,
+    mod_fit   <- rstan::sampling(stanmodels$ridge, data = stan_dat,
                           chains = chains, iter = iter, cores = cores,
                           control = list(adapt_delta = adapt_delta,
                                          max_treedepth = max_treedepth))
@@ -48,7 +49,7 @@ bridge_net <- function(X, prior_scale = 1, chains = 4, models = 1,
 
       stan_dat <- list(N = N, K = K, X = X, prior_scale = temp)
 
-      mod_fit[[i]] <- sampling(stanmodels$ridge, data = stan_dat, cores = cores,
+      mod_fit[[i]] <- rstan::sampling(stanmodels$ridge, data = stan_dat, cores = cores,
                                chains = chains, iter = iter, refresh = 0,
                                control = list(adapt_delta = adapt_delta,
                                               max_treedepth = max_treedepth))

@@ -6,7 +6,7 @@ bridge_net <- function(X, prior_scale = 1, chains = 4, models = 1,
                        scale_seq = scale_seq, iter = 2000,
                        adapt_delta = 0.80, max_treedepth = 10){
 
-  cores <- parallel::detectCores() - 2
+  #cores <- parallel::detectCores(dev_mode()) - 2
 
   if(sum(colSums(is.na(X))) > 0){
     warning("NA values detected and removed", call. = FALSE)
@@ -30,7 +30,7 @@ bridge_net <- function(X, prior_scale = 1, chains = 4, models = 1,
     stan_dat <- list(N = N, K = K, X = X, prior_scale = prior_scale)
     # fit model
     mod_fit   <- rstan::sampling(stanmodels$ridge, data = stan_dat,
-                          chains = chains, iter = iter, cores = cores,
+                          chains = chains, iter = iter, #cores = cores,
                           control = list(adapt_delta = adapt_delta,
                                          max_treedepth = max_treedepth))
 
@@ -50,7 +50,7 @@ bridge_net <- function(X, prior_scale = 1, chains = 4, models = 1,
 
       stan_dat <- list(N = N, K = K, X = X, prior_scale = temp)
 
-      mod_fit[[i]] <- rstan::sampling(stanmodels$ridge, data = stan_dat, cores = cores,
+      mod_fit[[i]] <- rstan::sampling(stanmodels$ridge, data = stan_dat, #cores = cores,
                                chains = chains, iter = iter, refresh = 0,
                                control = list(adapt_delta = adapt_delta,
                                               max_treedepth = max_treedepth))

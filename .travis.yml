@@ -26,14 +26,14 @@ before_install:
 script: 
   - |
     travis_wait 42 R CMD build .
-    travis_wait 59 R CMD check anRpackage*tar.gz
+    travis_wait 59 R CMD check bnets*tar.gz
 
 after_script:
-  - tar -ztvf anRpackage_*.tar.gz
+  - tar -ztvf bnets_*.tar.gz
   - echo ${NOT_CRAN}
 
 after_success:
   - travis_wait 40 tar -C .. -xf $PKG_TARBALL
 
 after_failure:
-  - cat anRpackage.Rcheck/00*
+  - cat bnets.Rcheck/00*

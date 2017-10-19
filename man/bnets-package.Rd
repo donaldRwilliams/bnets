@@ -1,24 +1,24 @@
-\name{anRpackage-package}
-\alias{anRpackage-package}
-\alias{anRpackage}
+\name{bnets-package}
+\alias{bnets-package}
+\alias{bnets}
 \docType{package}
 \title{
-\packageTitle{anRpackage}
+\packageTitle{bnets}
 }
 \description{
-\packageDescription{anRpackage}
+\packageDescription{bnets}
 }
 \details{
 
 The DESCRIPTION file:
-\packageDESCRIPTION{anRpackage}
-\packageIndices{anRpackage}
+\packageDESCRIPTION{bnets}
+\packageIndices{bnets}
 ~~ An overview of how to use the package, including the most important functions ~~
 }
 \author{
-\packageAuthor{anRpackage}
+\packageAuthor{bnets}
 
-Maintainer: \packageMaintainer{anRpackage}
+Maintainer: \packageMaintainer{bnets}
 }
 \references{
 ~~ Literature or other references for background information ~~

@@ -1,4 +1,6 @@
 #' @export
+#' @import rstan
+#' @import parallel
 #' @useDynLib bnets, .registration = TRUE
 bridge_net <- function(X, prior_scale = 1, chains = 4, models = 1,
                        scale_seq = scale_seq, iter = 2000,

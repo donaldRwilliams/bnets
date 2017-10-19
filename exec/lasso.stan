@@ -21,15 +21,12 @@ parameters {
 }
 model{
   for(k in 1:K){
-
-    // Likelihood
+ // Likelihood
     X[,k] ~ normal(b_int[k] + X[,index[k]]*b[k], sigma[k]);
-
-    //priors
+//priors
     sigma[k] ~ cauchy(0, 2);
     b_int[k] ~ cauchy(0, 2);
-
-    //regularizing prior
+//regularizing prior
     b[k] ~ double_exponential(0, lasso_scale * lasso_inv_lambda);
     lasso_inv_lambda ~ chi_square(lasso_df);
   }

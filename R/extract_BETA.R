@@ -97,6 +97,6 @@ extract_BETA <- function(x, prior_scale, prob){
               ub_hdi = hdi(value, prob)[2])
 
   list(summary = results, posterior_sample_BETA = dat,
-       posterior_samples_not_BETA = not_coefs)
+       posterior_samples_not_BETA = not_BETA)
 }
 

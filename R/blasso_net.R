@@ -2,7 +2,7 @@
 #' @import rstan
 #' @import parallel
 #' @useDynLib bnets, .registration = TRUE
-blasso_net <- function(X, lasso_df = 1, lasso_scale = 1, chains = 4,
+blasso_net <- function(X, lasso_df = 1, prior_scale = 1, chains = 4, models = 1,
                        iter = 2000, adapt_delta = 0.80, max_treedepth = 10){
   #-arguements:
   #   1) X = matrix or data.frame of variables
@@ -25,24 +25,62 @@ blasso_net <- function(X, lasso_df = 1, lasso_scale = 1, chains = 4,
   X <- as.matrix(na.omit(scale(X)))
   N <- length(X[,1])
   K <- ncol(X)
-
+  mod_fit <- list()
   if(lasso_df <= 0){
     stop("The degrees of freedom parameter must be positive. The default is set to 1")
   }
-  if(lasso_scale <= 0){
+  if(prior_scale <= 0){
     stop("The scale parameter must be positive. The default is set to 1")
   }
   if(iter > 2000){
     warning("Increasing iterations will make model fitting slower and may not be necessary for model convergence!")
   }
-
+  if(models == 1){
   # create Stan data
   stan_dat <- list(N = N, K = K, X = X, lasso_df = lasso_df,
-                   lasso_scale = lasso_scale)
+                   lasso_scale = prior_scale)
 
   # fit model
-  mod <- sampling(stanmodels$lasso, data = stan_dat,
+  mod_fit <- sampling(stanmodels$lasso, data = stan_dat,
                   chains = chains, iter = iter,
                   control = list(adapt_delta = adapt_delta,
                                  max_treedepth = max_treedepth))
 }
+else if(models > 1){
+  if((as.numeric(models) ==  length(prior_scale)) == 0){
+    stop("Models must be same length as prior scale")
+  }
+  total <- length(prior_scale)
+  # create progress bar
+  pb <- txtProgressBar(min = 1, max = total, style = 3)
+
+  for(i in 1:length(prior_scale)){
+    setTxtProgressBar(pb, i)
+
+    temp <- prior_scale[i]
+
+    stan_dat <- list(N = N, K = K, X = X, lasso_df = lasso_df,
+                     lasso_scale = prior_scale)
+
+    mod_fit[[i]] <- sampling(stanmodels$lasso, data = stan_dat,
+                             chains = chains, iter = iter,
+                             control = list(adapt_delta = adapt_delta,
+                                            max_treedepth = max_treedepth))
+  }
+}
+temp_names <- rep("prior_scale", length(prior_scale))
+
+mod_names <- paste(temp_names, prior_scale, sep = " ")
+
+if(length(mod_fit) == 1){
+  mod_fit <-  list(mod_fit, "")
+  names(mod_fit) <- c(mod_names, "")
+}
+
+names(mod_fit) <- mod_names
+list(mod_fit = c(mod_fit), stan_dat = c(stan_dat))
+}
+
+
+
+

@@ -80,7 +80,7 @@ if(length(mod_fit) == 1){
 }
 
 names(mod_fit) <- mod_names
-list(mod_fit = c(mod_fit), stan_dat = c(stan_dat))
+list(mod_fit = c(mod_fit), stan_dat = c(stan_dat), iter = iter, chains = chains)
 }
 
 

@@ -29,9 +29,11 @@ blasso_net <- function(X, lasso_df = 1, prior_scale = 1, chains = 4, models = 1,
   if(lasso_df <= 0){
     stop("The degrees of freedom parameter must be positive. The default is set to 1")
   }
-  if(prior_scale <= 0){
+  for(i in 1:length(prior_scale)){
+    temp <- prior_scale[i]
+  if(temp <= 0){
     stop("The scale parameter must be positive. The default is set to 1")
-  }
+  }}
   if(iter > 2000){
     warning("Increasing iterations will make model fitting slower and may not be necessary for model convergence!")
   }
@@ -60,7 +62,7 @@ else if(models > 1){
     temp <- prior_scale[i]
 
     stan_dat <- list(N = N, K = K, X = X, lasso_df = lasso_df,
-                     lasso_scale = prior_scale)
+                     lasso_scale = temp)
 
     mod_fit[[i]] <- sampling(stanmodels$lasso, data = stan_dat,
                              chains = chains, iter = iter,

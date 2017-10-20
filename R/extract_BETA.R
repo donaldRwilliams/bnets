@@ -2,7 +2,7 @@
 #' @import dplyr
 #' @import HDInterval
 
-extract_BETA <- function(x, prior_scale, prob){
+extract_BETA <- function(x, prior_scale, nodes = NULL, prob){
 
   #a <- x$mod_fit
 
@@ -89,6 +89,7 @@ extract_BETA <- function(x, prior_scale, prob){
 
   melt_dat <-suppressMessages(reshape2::melt(dat))
 
+  if(is.null(nodes)){
   results <-  melt_dat %>%
     group_by(variable) %>%
     summarise(mean = mean(value),
@@ -97,6 +98,35 @@ extract_BETA <- function(x, prior_scale, prob){
               ub_hdi = hdi(value, prob)[2])
 
   list(summary = results, posterior_sample_BETA = dat,
-       posterior_samples_not_BETA = not_BETA)
+        posterior_samples_not_BETA = not_BETA)
+
+  }else if (!is.null(nodes)){
+    node_select <- c(nodes)
+    node_select <- paste("y_", node_select, sep = "")
+    node_BETA <- lapply(node_select[1:length(node_select)], function(x) select(dat, contains(x)))
+    node_not_BETA <- lapply(node_select[1:length(node_select)], function(x) select(not_BETA, contains(x)))
+
+
+    node_BETA_df <- data.frame(node_BETA)
+    node_not_BETA_df <- data.frame(node_not_BETA)
+
+    temp_names <- colnames(node_BETA_df)
+    temp_names2 <- colnames(node_not_BETA_df)
+
+    colnames(node_BETA_df) <- gsub("[.]{1}", "~", temp_names)
+    colnames(node_not_BETA_df) <- gsub("[.]{1}", "~", temp_names2)
+
+    melt_dat <-  suppressMessages(reshape2::melt(node_BETA_df))
+
+    results <-  melt_dat %>%
+      group_by(variable) %>%
+      summarise(mean = mean(value),
+                median = median(value),
+                lb_hdi = hdi(value, prob)[1],
+                ub_hdi = hdi(value, prob)[2])
+
+    list(summary = results, posterior_sample_BETA = node_BETA_df,
+         posterior_samples_not_BETA = node_not_BETA_df)
+ }
 }
 

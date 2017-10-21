@@ -1,7 +1,7 @@
 #' @export
 #' @import dplyr
 #' @import HDInterval
-
+#' @import R1magic
 extract_BETA <- function(x, prior_scale, nodes = NULL, prob){
 
   #a <- x$mod_fit

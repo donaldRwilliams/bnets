@@ -5,7 +5,6 @@
 #' @import HDInterval
 #' @import dplyr
 #' @import reshape2
-#' @import mode
 #' @useDynLib bnets, .registration = TRUE
 
 in_sample_fit <- function(x, X, fit_index, prior_scale = NULL, node, prob){
@@ -58,7 +57,7 @@ results_r2 <- mlt_bayes_r2 %>%
             ub_hdi = hdi(value, prob)[2])
 list(bayes_r2 = results_r2, posterior_sample = dat_r2)
 }
-##########3
+
 else if(fit_index == "bayes_MSE"){
   node_loop <- node
   for(i in 1:length(node_loop)){
@@ -70,12 +69,6 @@ else if(fit_index == "bayes_MSE"){
     beta <- cbind(temp$posterior_samples_not_BETA[,1],
                   temp$posterior_sample_BETA)
 
-
-    #temp <- bnets::extract_BETA(x, prior_scale = prior_scale,
-     #                           node = node_temp, prob = 0.50)
-
-    #beta <- cbind(temp$posterior_samples_not_BETA[,1],
-     #             temp$posterior_sample_BETA)
     for (j in 1:nrow(beta)){
       b_temp <- beta[j,]
       mat_pred[j, 1:length(X_pred[,node_temp])] <- as.matrix(X_pred) %*% as.numeric(b_temp)
@@ -109,13 +102,6 @@ list(bayes_MSE = results_MSE, posterior_samples = dat_MSE)
                                 node = node_temp, prob = 0.50)
     beta <- cbind(temp$posterior_samples_not_BETA[,1],
                   temp$posterior_sample_BETA)
-
-
-    #temp <- bnets::extract_BETA(x, prior_scale = prior_scale,
-    #                           node = node_temp, prob = 0.50)
-
-    #beta <- cbind(temp$posterior_samples_not_BETA[,1],
-    #             temp$posterior_sample_BETA)
     for (j in 1:nrow(beta)){
       b_temp <- beta[j,]
       mat_pred[j, 1:length(X_pred[,node_temp])] <- as.matrix(X_pred) %*% as.numeric(b_temp)
@@ -139,18 +125,52 @@ list(bayes_MSE = results_MSE, posterior_samples = dat_MSE)
               lb_hdi = hdi(value, prob)[1],
               ub_hdi = hdi(value, prob)[2])
   list(bayes_RMSE = results_RMSE, posterior_samples = dat_RMSE)
- }
+} else if(fit_index == "all"){
+  node_loop <- node
+  for(i in 1:length(node_loop)){
+    node_temp <- node_loop[i]
+    X_pred <- data.frame(1, scale(X[,-node_temp]))
+    temp <- bnets::extract_BETA(x, prior_scale = prior_scale,
+                                node = node_temp, prob = 0.50)
+    beta <- cbind(temp$posterior_samples_not_BETA[,1],
+                  temp$posterior_sample_BETA)
+    for (j in 1:nrow(beta)){
+      b_temp <- beta[j,]
+      mat_pred[j, 1:length(X_pred[,node_temp])] <- as.matrix(X_pred) %*% as.numeric(b_temp)
+    }
+    temp_mse <- NULL
+    temp_rmse <- NULL
+    for(k in 1:nrow(mat_pred)){
+      mse_temp  <- mat_pred[k,]
+      rmse_temp <- mat_pred[k,]
+      mse <- mean((mse_temp - scale(X[,node_temp]))^2)
+      rmse <- sqrt(mean((rmse_temp - scale(X[,node_temp]))^2))
+      temp_mse[k] <- mse
+      temp_rmse[k] <- rmse
 }
+    e <- 1 * sweep(mat_pred, 2, X[,node_temp])
+    var_yhat <- apply(mat_pred,1, var)
+    var_e <- apply(e, 1, var)
+    r_2 <- var_yhat / (var_yhat + var_e)
+    bayes_r2[[i]] <- r_2
+    bayes_MSE[[i]] <- temp_mse
+    bayes_RMSE[[i]] <- temp_rmse
+}
+  names(bayes_r2) <- paste("node", node, sep = "_")
+  names(bayes_MSE) <- paste("node", node, sep = "_")
+  names(bayes_RMSE) <- paste("node", node, sep = "_")
+  }
 
+  c_all <- rbind.data.frame(bayes_r2, bayes_MSE, bayes_RMSE)
+  c_all$fit_index <- rep(c("bayes_r2", "bayes_MSE", "bayes_RMSE"), each = 4000)
+  mlt_call <- suppressMessages(reshape2::melt(c_all))
 
-
-
-test_in_sample <- in_sample_fit(x, X, fit_index = "bayes_RMSE", prior_scale = 5, node = c(1:2), prob = .95)
-test_in_sample$bayes_RMSE
-mlt_in_sample <- reshape2::melt(test_in_sample)
-mlt_in_sample %>% group_by(L2, L1) %>% summarise(mean = mean(value),
-                                                 median = median(value),
-                                                 mode = mode(value),
-                                                 lb_hdi = hdi(value, prob)[1],
-                                                 ub_hdi = hdi(value, prob)[2])
-
+  all_results <- mlt_call %>% group_by(variable, fit_index) %>%
+    summarise(mean = mean(value),
+              median = median(value),
+              mode = mode(value),
+              lb_hdi = hdi(value, prob)[1],
+              ub_hdi = hdi(value, prob)[2])
+  list(summary_all = all_results, bayes_r2 = bayes_r2,
+       bayes_MSE = bayes_MSE, bayes_RMSE = bayes_RMSE)
+}

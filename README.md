@@ -1,1 +1,1 @@
-bnets: Bayesian network models via stan
+# bnets: Bayesian network models via Stan

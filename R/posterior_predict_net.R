@@ -27,7 +27,7 @@ posterior_predict_net <- function(x, X, prior_scale = NULL, node, nsims){
                     ncol = x$stan_dat$K)
 
       for(i in 1:length(node_loop)){
-              node_temp <- node_loop[1]
+              node_temp <- node_loop[i]
               temp <- bnets::extract_BETA(x, prior_scale = prior_scale,
                                           node = node_temp, prob = 0.50)
               beta <- cbind(temp$posterior_samples_not_BETA[,1],

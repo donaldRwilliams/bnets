@@ -7,79 +7,60 @@
 #' @import reshape2
 #' @useDynLib bnets, .registration = TRUE
 
-out_of_sample_fit <- function(x, fit_index){
-
-models <- length(x)
-prior_scale <- as.numeric(gsub("[A-z]",replacement = "", x =  names(x$mod_fit)))
-X <- x$stan_dat$X
-n_samples <- (x$iter * x$chains) / 2
-store_ll <- array(NA , c(n_samples, nrow(X), length(prior_scale), length(node)))
-for(i in 1:length(prior_scale)){
-  prior_temp <- prior_scale[i]
-  for(k in 1:length(node)){
-
-      node_temp <- node[k]
-      temp <- bnets::extract_BETA(x, prior_scale = prior_temp,
-                                  node = node_temp, prob = 0.50)
-      beta <- cbind(temp$posterior_samples_not_BETA[,1],
-                      temp$posterior_sample_BETA)
-      sig <- temp$posterior_samples_not_BETA[,2]
-      beta <- as.matrix(beta)
-
-      X_mat <- data.frame(1, X[, -node_temp])
-
-    store_ll[,,i, k] = t(sapply(1:n_samples,
-                           function(s) dnorm(X[,node_temp],mean =
-                               as.matrix(X_mat) %*% beta[s,],
-                               sd = sig[s], log = TRUE)))
-  }
+global_out_of_sample <- function(x, fit_index){
+  prior_scale = x$prior_scale
+  if (fit_index == "loo"){
+    loo_list <- list()
+    for(i in 1:length(prior_scale)){
+      temp <- as.matrix(as.data.frame(x$log_lik[,,i,]))
+      loo_list[[i]] <- loo::loo(temp)
 }
-if (fit_index == "loo"){
-loo_list <- list()
-for(i in 1:length(prior_scale)){
-  temp <- as.matrix(as.data.frame(store_ll[,,i,]))
-  loo_list[[i]] <- loo::loo(temp)
+names(loo_list) <- x$prior_scale
+loo_temp <- list()
+  for(i in 1:length(loo_list)){
+    loo_temp[[i]] <-cbind(loo_list[[i]])[1:6]
+    }
+  mlt <- reshape2::melt(loo_temp) %>% group_by(L2, L1)
+  df_temp <- reshape2::dcast(mlt, L1 ~ L2)[,-1]
+  colnames(df_temp) <- row.names(cbind(loo_list[[2]]))[1:6]
+  temp1 <- data.frame(prior_scale, df_temp)
+  temp2 <- temp1 %>%
+    arrange(desc(elpd_loo))
+
+results <- data.frame(prior_scale = temp2$prior_scale,
+                      elpd = temp2$elpd_loo,
+                      elpd_se = temp2$se_elpd_loo,
+                      looic = temp2$looic,
+                      looic_se = temp2$se_looic,
+                      p_loo = temp2$p_loo,
+                      p_loo_se = temp2$se_p_loo)
+list(results = results, loo_list = loo_list)
 }
-
-#grid_comp <-  t(combn(4, 2))
-l <- list()
-for(i in 1:4){
-l[[i]] <-cbind(loo_list[[i]])[1:6]
-}
-mlt <- reshape2::melt(l) %>% group_by(L2, L1)
-t <- reshape2::dcast(mlt, L1 ~ L2)[,-1]
-#t <- t[,-1]
-#temp <- data.frame(prior_scale, t)
-colnames(t) <- row.names(cbind(loo_list[[2]]))[1:6]
-
-temp <- data.frame(prior_scale, t)
-#temp
-done_deal <- temp %>% arrange(desc(elpd_loo))
-list(done_deal = done_deal, log_lik = store_ll)
-
-}else if(fit_index == "waic"){
+else if(fit_index == "waic"){
   waic_list <- list()
   for(i in 1:length(prior_scale)){
-    temp <- as.matrix(as.data.frame(store_ll[,,i,]))
+    temp <- as.matrix(as.data.frame(x$log_lik[,,i,]))
     waic_list[[i]] <- loo::waic(temp)
   }
-
-  #grid_comp <-  t(combn(4, 2))
-  l <- list()
-  for(i in 1:4){
-    l[[i]] <-cbind(waic_list[[i]])[1:6]
+names(waic_list) <- prior_scale
+  waic_temp <- list()
+  for(i in 1:length(waic_list)){
+    waic_temp[[i]] <-cbind(waic_list[[i]])[1:6]
   }
-  mlt <- reshape2::melt(l) %>% group_by(L2, L1)
-  t <- reshape2::dcast(mlt, L1 ~ L2)[,-1]
-  #t <- t[,-1]
-  #temp <- data.frame(prior_scale, t)
-  colnames(t) <- row.names(cbind(waic_list[[2]]))[1:6]
+  mlt <- reshape2::melt(waic_temp) %>% group_by(L2, L1)
+  df_temp <- reshape2::dcast(mlt, L1 ~ L2)[,-1]
+  colnames(df_temp) <- row.names(cbind(waic_list[[2]]))[1:6]
+  temp1 <- data.frame(prior_scale, df_temp)
+  temp2 <- temp1 %>%
+    arrange(desc(elpd_waic))
 
-  temp <- data.frame(prior_scale, t)
-  #temp
-  done_deal <- temp %>% arrange(desc(elpd_waic))
-  list(done_deal = done_deal, log_lik = store_ll)
+  results <- data.frame(prior_scale = temp2$prior_scale,
+                        elpd_waic = temp2$elpd_waic,
+                        elpd_se = temp2$se_elpd_waic,
+                        waic = temp2$waic,
+                        waic_se = temp2$se_waic,
+                        p_waic = temp2$p_waic,
+                        p_waic_se = temp2$se_p_waic)
+
+  list(results = results, waic_list = waic_list)
 }}
-
-
-

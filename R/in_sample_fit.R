@@ -21,7 +21,7 @@ if(sum(node <= 0) > 0){
 if(length(node) > x$stan_dat$K){
   stop("Specified more nodes than in the model")
 }
-  mat_pred <- matrix(nrow = (x$iter * x$chains) / 2, ncol = length(X[,1]))
+mat_pred <- matrix(nrow = (x$iter * x$chains) / 2, ncol = length(X[,1]))
 if(fit_index == "bayes_r2"){
 # list to store node_wise y_rep
 # rename node argument

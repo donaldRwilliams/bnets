@@ -78,10 +78,9 @@ par_corr_lasso$summary[1:10,]
 9     1   10  0.0323693183  0.01781611  3.977780e-04 -0.002002034 0.11743047 -0.006678188 0.11335299
 10    2    3  0.1029003692  0.10023844  9.684066e-02  0.000000000 0.19354966  0.000000000 0.22063858
 ```
-```
+
 #### to visualize, we can choose the partial correlation mean, median, or mode.
 ##### 1) Mode:
-
 ```{r}
 qgraph(par_corr_lasso$matrices$mode_par)
 ```

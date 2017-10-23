@@ -79,7 +79,7 @@ par_corr_lasso$summary[1:10,]
 10    2    3  0.1029003692  0.10023844  9.684066e-02  0.000000000 0.19354966  0.000000000 0.22063858
 ```
 
-#### to visualize, we can choose the partial correlation mean, median, or mode.
+#### We can choose the partial correlation mean, median, or mode.
 ##### 1) Mode:
 ```{r}
 qgraph(par_corr_lasso$matrices$mode_par)

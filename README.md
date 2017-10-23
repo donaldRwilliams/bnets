@@ -100,7 +100,7 @@ ppc_dens_overlay(X[,1], yrep =  y_rep$y_rep$node_1)
 ![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/posterior_predict.PNG)
 
 ### In sample fit:
-#### (Bayesian methods provide probability intervals are each)
+#### (Bayesian methods provide probability intervals)
 ```{r}
 fit_blasso <- in_sample_fit(mod_lasso, X, fit_index = "all", prior_scale = 0.01, node = 1:5, prob = 0.90)
 fit_blasso$summary_all

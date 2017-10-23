@@ -81,10 +81,14 @@ par_corr_lasso$summary[1:10,]
 ```
 #### to visualize, we can choose the partial correlation mean, median, or mode.
 ##### 1) Mode:
+
 ```{r}
 qgraph(par_corr_lasso$matrices$mode_par)
 ```
 ![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/mode.PNG)
 ##### 2) Mean:
+```{r}
+qgraph(par_corr_lasso$matrices$mean_par)
+```
 ![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/mean.PNG)
 }

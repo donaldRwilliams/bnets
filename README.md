@@ -88,4 +88,3 @@ qgraph(par_corr_lasso$matrices$mode_par)
 qgraph(par_corr_lasso$matrices$mean_par)
 ```
 ![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/mean.PNG)
-}

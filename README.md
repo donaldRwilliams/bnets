@@ -8,7 +8,10 @@ bnets allow for fitting regularized partial correlation networks. Regularization
 
 ### Installation
 #### Development Version
-<span style="color:red">some **This is Red Bold.** text</span>
+```diff
++ this text is highlighted in green
+- this text is highlighted in red
+```
 ```{r}
 if (!require(devtools)) {
   install.packages("devtools")

@@ -30,6 +30,7 @@ install_github("donaldRwilliams/bnets", args = "--preclean")
 library(bnets)
 library(psych)
 library(qgraph)
+library(bayesplot)
 ```
 #### Big five inventory data:
 ```
@@ -88,3 +89,13 @@ qgraph(par_corr_lasso$matrices$mode_par)
 qgraph(par_corr_lasso$matrices$mean_par)
 ```
 ![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/mean.PNG)
+
+#### Posterior predictive checks:
+```{r}
+# posterior predictive
+y_rep <- posterior_predict_net(mod_lasso, X, prior_scale = 0.01, nsims = 500, node = 1)
+# plot
+ppc_dens_overlay(X[,1], yrep =  y_rep$y_rep$node_1)
+```
+
+

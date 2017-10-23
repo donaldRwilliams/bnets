@@ -35,7 +35,7 @@ library(qgraph)
 ```
 X <- bfi[1:100, 1:10]
 ```
-#### Fit blasso (Bayesian LASSO) regression with three prior scales"
+#### Fit blasso (Bayesian LASSO) regression with three prior scales
 ```{r}
 mod_lasso <- blasso_net(X, lasso_df = 3, models = 3, prior_scale = c(0.01, 0.1, 0.5))
 ```

@@ -33,7 +33,7 @@ extract_BETA <- function(x, prior_scale, nodes = NULL, prob){
   # select intercepts and sigma
   not_BETA <- temp %>%
     dplyr::select(-starts_with("b.")) %>%
-    select(contains("b_int."), contains("sigma."),
+    dplyr::select(contains("b_int."), contains("sigma."),
            contains("lp__"))
 
   # column names (only numbers) of BETA estiamtes
@@ -48,7 +48,7 @@ extract_BETA <- function(x, prior_scale, nodes = NULL, prob){
 
     if(temp < 100){
       x_vars[i] <- substr(temp, 1, nchar(temp) - 1)
-    }else if(t_test >= 100){
+    }else if(temp >= 100){
       x_vars[i] <- substr(temp, 1, nchar(temp) - 2)
     }
   }
@@ -58,7 +58,9 @@ extract_BETA <- function(x, prior_scale, nodes = NULL, prob){
   x_vars <- length(unique(x_vars))
   temp_1 <- paste("b", ".", 1:x_vars, sep = "")
   temp_2 <- paste0(temp_1, ".")
-  temp_dat <- lapply(temp_2[1:x_vars], function(x) select(BETA_est, contains(x)))
+
+  temp_dat <- lapply(temp_2[1:x_vars], function(x)   dplyr::select(BETA_est, contains(x)))
+
   names(temp_dat) <-  paste(rep("y", x_vars), 1:x_vars, sep = "_")
   temp_4 <- as.numeric(substr(names(temp_dat), 3, 10) )
 
@@ -102,9 +104,9 @@ extract_BETA <- function(x, prior_scale, nodes = NULL, prob){
 
   }else if (!is.null(nodes)){
     node_select <- c(nodes)
-    node_select <- paste("y_", node_select, sep = "")
-    node_BETA <- lapply(node_select[1:length(node_select)], function(x) select(dat, contains(x)))
-    node_not_BETA <- lapply(node_select[1:length(node_select)], function(x) select(not_BETA, contains(x)))
+    node_select <- paste("y_", node_select, "~", sep = "")
+    node_BETA <- lapply(node_select[1:length(node_select)], function(x) dplyr::select(dat, matches(x)))
+    node_not_BETA <- lapply(node_select[1:length(node_select)], function(x) dplyr::select(not_BETA, contains(x)))
 
 
     node_BETA_df <- data.frame(node_BETA)

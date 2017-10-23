@@ -64,7 +64,6 @@ par_corr_lasso <- partial_corr(mod_lasso, prior_scale = 0.01, prob = 0.90)
 #### Unlike classical methods that lack standard errors, Bayesain
 #### methods provide intervals for the partial correlations:
 ```
-```{r}
 par_corr_lasso$summary[1:10,]
    Var1 Var2          mean      median          mode       lb_hdi     ub_hdi        lb_eq      ub_eq
 1     1    2 -0.0876583794 -0.08570979 -2.033863e-03 -0.178225669 0.00000000 -0.199803674 0.00000000
@@ -78,7 +77,6 @@ par_corr_lasso$summary[1:10,]
 9     1   10  0.0323693183  0.01781611  3.977780e-04 -0.002002034 0.11743047 -0.006678188 0.11335299
 10    2    3  0.1029003692  0.10023844  9.684066e-02  0.000000000 0.19354966  0.000000000 0.22063858
 ```
-
 #### We can choose the partial correlation mean, median, or mode.
 ##### 1) Mode:
 ```{r}

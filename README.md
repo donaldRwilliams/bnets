@@ -30,32 +30,38 @@ install_github("donaldRwilliams/bnets", args = "--preclean")
 library(bnets)
 library(psych)
 library(qgraph)
-
+```
+#### Big five inventory data:
+```
 X <- bfi[1:100, 1:10]
-
-# fit blasso (Bayesian LASSO) regression with three prior scales
+```
+#### fit blasso (Bayesian LASSO) regression with three prior scales"
+```{r}
 mod_lasso <- blasso_net(X, lasso_df = 3, models = 3, prior_scale = c(0.01, 0.1, 0.5))
-
-# compute log likelihood
+```
+#### compute log likelihood:
+```{r}
 ll_lasso <- log_likelihood(mod_lasso)
-
-# compare models with LOO
+```
+##### compare models with LOO
 loo <- global_out_of_sample(ll_lasso, fit_index = "loo")
-
-# Select models based on lowest LOOIC value
+```
+```{r}
+#### select models based on lowest LOOIC value
+```{r}
 loo$results
-
   prior_scale      elpd  elpd_se    looic looic_se    p_loo p_loo_se
 1        0.01 -1286.438 22.66390 2572.877 45.32780 72.09085 4.133830
 2        0.10 -1286.635 23.17878 2573.269 46.35756 82.75012 4.592892
 3        0.50 -1288.412 23.27100 2576.824 46.54200 85.21935 4.739270
-
-# compute partial correlation matrix
+```
+#### compute partial correlation matrix:
+```{r}
 par_corr_lasso <- partial_corr(mod_lasso, prior_scale = 0.01, prob = 0.90)
-
-# See results. Unlike classical methods that lack standard errors, Bayesain
-# methods provide intervals for the partial correlations
-
+```
+# see results. Unlike classical methods that lack standard errors, Bayesain
+# methods provide intervals for the partial correlations"
+```{r}
 par_corr_lasso$summary[1:10,]
    Var1 Var2          mean      median          mode       lb_hdi     ub_hdi        lb_eq      ub_eq
 1     1    2 -0.0876583794 -0.08570979 -2.033863e-03 -0.178225669 0.00000000 -0.199803674 0.00000000
@@ -68,9 +74,10 @@ par_corr_lasso$summary[1:10,]
 8     1    9  0.0208020712  0.00000000  2.418707e-04 -0.026126197 0.09492174 -0.024757211 0.09661200
 9     1   10  0.0323693183  0.01781611  3.977780e-04 -0.002002034 0.11743047 -0.006678188 0.11335299
 10    2    3  0.1029003692  0.10023844  9.684066e-02  0.000000000 0.19354966  0.000000000 0.22063858
-
+```
 # to visualize, we can choose the partial correlation mean, median, or mode.
 # 1) mode
+```{r}
 qgraph(par_corr_lasso$matrices$mode_par)
 
 # 2) median

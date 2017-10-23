@@ -44,6 +44,7 @@ mod_lasso <- blasso_net(X, lasso_df = 3, models = 3, prior_scale = c(0.01, 0.1, 
 ll_lasso <- log_likelihood(mod_lasso)
 ```
 ##### compare models with LOO
+```{r}
 loo <- global_out_of_sample(ll_lasso, fit_index = "loo")
 ```
 ```{r}
@@ -59,8 +60,9 @@ loo$results
 ```{r}
 par_corr_lasso <- partial_corr(mod_lasso, prior_scale = 0.01, prob = 0.90)
 ```
-# see results. Unlike classical methods that lack standard errors, Bayesain
-# methods provide intervals for the partial correlations"
+```
+#### see results. Unlike classical methods that lack standard errors, Bayesain
+#### methods provide intervals for the partial correlations"
 ```{r}
 par_corr_lasso$summary[1:10,]
    Var1 Var2          mean      median          mode       lb_hdi     ub_hdi        lb_eq      ub_eq
@@ -75,14 +77,12 @@ par_corr_lasso$summary[1:10,]
 9     1   10  0.0323693183  0.01781611  3.977780e-04 -0.002002034 0.11743047 -0.006678188 0.11335299
 10    2    3  0.1029003692  0.10023844  9.684066e-02  0.000000000 0.19354966  0.000000000 0.22063858
 ```
-# to visualize, we can choose the partial correlation mean, median, or mode.
-# 1) mode
+##### to visualize, we can choose the partial correlation mean, median, or mode.
+###### 1) mode
 ```{r}
 qgraph(par_corr_lasso$matrices$mode_par)
 ```
 ![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/mode.PNG)
 
-# 2) median
-
-
+###### 2) median
 }

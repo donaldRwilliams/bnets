@@ -29,7 +29,7 @@ log_likelihood <- function(x){
   for(k in 1:length(nodes)){
     node_temp <- nodes[k]
     # temporary beta extraction
-    temp <- bnets::extract_BETA(x, prior_scale = prior_temp,
+    temp <- extract_BETA(x, prior_scale = prior_temp,
                                 node = node_temp, prob = 0.50)
     # betas (beta[,1] as intercept)
     beta <- cbind(temp$posterior_samples_not_BETA[,1],

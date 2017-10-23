@@ -79,6 +79,8 @@ par_corr_lasso$summary[1:10,]
 # 1) mode
 ```{r}
 qgraph(par_corr_lasso$matrices$mode_par)
+```
+![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/mode.PNG)
 
 # 2) median
 

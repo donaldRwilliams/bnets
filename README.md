@@ -97,5 +97,5 @@ y_rep <- posterior_predict_net(mod_lasso, X, prior_scale = 0.01, nsims = 500, no
 # plot
 ppc_dens_overlay(X[,1], yrep =  y_rep$y_rep$node_1)
 ```
-
+![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/posterior_predict.PNG)
 

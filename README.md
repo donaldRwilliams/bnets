@@ -6,7 +6,9 @@ bnets allow for fitting regularized partial correlation networks. Regularization
 2. Ridge regression
 3. Horeshoe Estimators
 
-### Install: Developmental Verison
+### Installation
+#### Development Version
+
 ```{r}
 if (!require(devtools)) {
   install.packages("devtools")

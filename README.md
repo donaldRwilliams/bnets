@@ -1,7 +1,10 @@
 # bnets: Bayesian network models via Stan
 ```diff
-- CAUTION: This package can be used, but it has not (yet) been thoroughly tested for accuracy or compatability with all functions. -- --
-- Experienced users can certainly look at the code and compare estimates to other network packages. Feedback is welcome and greatly appreciated!
+- CAUTION: 
+- This package can be used, but it has not (yet) been thoroughly tested for 
+- accuracy or compatability with all functions. -- --
+- Experienced users can certainly look at the code and compare estimates to 
+- other network packages. Feedback is welcome and greatly appreciated!
 ```
 
 

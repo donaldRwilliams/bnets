@@ -1,4 +1,7 @@
 # bnets: Bayesian network models via Stan
+```diff
+- #### this text is highlighted in red
+```
 
 bnets allow for fitting regularized partial correlation networks. Regularization is acheived with Bayesian penalized regression techniques:
 
@@ -8,10 +11,7 @@ bnets allow for fitting regularized partial correlation networks. Regularization
 
 ### Installation
 #### Development Version
-```diff
-+ this text is highlighted in green
-- this text is highlighted in red
-```
+
 ```{r}
 if (!require(devtools)) {
   install.packages("devtools")

@@ -12,7 +12,7 @@ bnets allow for fitting regularized partial correlation networks. Regularization
 
 1. LASSO
 2. Ridge regression
-3. Horeshoe Estimators
+3. Horsehoe Estimators
 
 ### Installation
 #### Development Version

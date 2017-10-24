@@ -72,7 +72,7 @@ $results
 ```{r}
 par_corr_lasso <- partial_corr(mod_lasso, prior_scale = 0.01, prob = 0.90)
 ```
-### Bayesain methods provide intervals for the partial correlations:
+### Bayesian methods provide intervals for the partial correlations:
 (Unlike classical methods that typically lack standard errors)
 ```
 par_corr_lasso$summary[1:10,]

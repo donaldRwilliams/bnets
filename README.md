@@ -62,8 +62,7 @@ loo$results
 ```{r}
 par_corr_lasso <- partial_corr(mod_lasso, prior_scale = 0.01, prob = 0.90)
 ```
-### Unlike classical methods that lack standard errors, Bayesain
-### methods provide intervals for the partial correlations:
+### Unlike classical methods that lack standard errors, Bayesain methods provide intervals for the partial correlations:
 ```
 par_corr_lasso$summary[1:10,]
    Var1 Var2          mean      median          mode       lb_hdi     ub_hdi        lb_eq      ub_eq

@@ -2,7 +2,7 @@
 ```diff
 - CAUTION: 
 - This package can be used, but it has not (yet) been thoroughly tested for 
-- accuracy or compatability between functions. Experienced users can 
+- accuracy or function combatability. Experienced users can 
 - certainly look at the code (still under development) and compare estimates 
 - to other network packages. All feedback is welcome and greatly appreciated!
 ```

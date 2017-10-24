@@ -24,8 +24,14 @@ loo_temp <- list()
   df_temp <- reshape2::dcast(mlt, L1 ~ L2)[,-1]
   colnames(df_temp) <- row.names(cbind(loo_list[[2]]))[1:6]
   temp1 <- data.frame(prior_scale, df_temp)
+
   temp2 <- temp1 %>%
     arrange(desc(elpd_loo))
+
+  delta <- temp2$looic - min(temp2$looic)
+  rel_ll <- exp(-0.5 * delta)
+  sum_ll <- sum(rel_ll)
+  loo_wt <- rel_ll / sum_LL
 
 results <- data.frame(prior_scale = temp2$prior_scale,
                       elpd = temp2$elpd_loo,
@@ -33,7 +39,9 @@ results <- data.frame(prior_scale = temp2$prior_scale,
                       looic = temp2$looic,
                       looic_se = temp2$se_looic,
                       p_loo = temp2$p_loo,
-                      p_loo_se = temp2$se_p_loo)
+                      p_loo_se = temp2$se_p_loo,
+                      loo_wt = loo_wt)
+
 list(results = results, loo_list = loo_list)
 }
 else if(fit_index == "waic"){
@@ -54,13 +62,19 @@ names(waic_list) <- prior_scale
   temp2 <- temp1 %>%
     arrange(desc(elpd_waic))
 
+  delta <- temp2$looic - min(temp2$waic)
+  rel_ll <- exp(-0.5 * delta)
+  sum_ll <- sum(rel_ll)
+  waic_wt <- rel_ll / sum_LL
+
   results <- data.frame(prior_scale = temp2$prior_scale,
                         elpd_waic = temp2$elpd_waic,
                         elpd_se = temp2$se_elpd_waic,
                         waic = temp2$waic,
                         waic_se = temp2$se_waic,
                         p_waic = temp2$p_waic,
-                        p_waic_se = temp2$se_p_waic)
+                        p_waic_se = temp2$se_p_waic,
+                        waic_wt = waic_wt)
 
   list(results = results, waic_list = waic_list)
 }}

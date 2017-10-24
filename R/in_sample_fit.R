@@ -27,7 +27,9 @@ if(fit_index == "bayes_r2"){
 # rename node argument
 node_loop <- node
 # matrix to store y_rep
+pb <- txtProgressBar(min = 0, max = max(node_loop), style = 3)
 for(i in 1:length(node_loop)){
+  setTxtProgressBar(pb, i)
   node_temp <- node_loop[i]
   X_pred <- data.frame(1, scale(X[,-node_temp]))
   temp <- bnets::extract_BETA(x, prior_scale = prior_scale,
@@ -60,8 +62,9 @@ list(bayes_r2 = results_r2, posterior_sample = dat_r2)
 
 else if(fit_index == "bayes_MSE"){
   node_loop <- node
+  pb <- txtProgressBar(min = 0, max = max(node_loop), style = 3)
   for(i in 1:length(node_loop)){
-
+    setTxtProgressBar(pb, i)
     node_temp <- node_loop[i]
     X_pred <- data.frame(1, scale(X[,-node_temp]))
     temp <- bnets::extract_BETA(x, prior_scale = prior_scale,
@@ -94,8 +97,9 @@ else if(fit_index == "bayes_MSE"){
 list(bayes_MSE = results_MSE, posterior_samples = dat_MSE)
 }else if(fit_index == "bayes_RMSE"){
   node_loop <- node
+  pb <- txtProgressBar(min = 0, max = max(node_loop), style = 3)
   for(i in 1:length(node_loop)){
-
+    setTxtProgressBar(pb, i)
     node_temp <- node_loop[i]
     X_pred <- data.frame(1, scale(X[,-node_temp]))
     temp <- bnets::extract_BETA(x, prior_scale = prior_scale,
@@ -127,7 +131,9 @@ list(bayes_MSE = results_MSE, posterior_samples = dat_MSE)
   list(bayes_RMSE = results_RMSE, posterior_samples = dat_RMSE)
 } else if(fit_index == "all"){
   node_loop <- node
+  pb <- txtProgressBar(min = 0, max = max(node_loop), style = 3)
   for(i in 1:length(node_loop)){
+    setTxtProgressBar(pb, i)
     node_temp <- node_loop[i]
     X_pred <- data.frame(1, scale(X[,-node_temp]))
     temp <- bnets::extract_BETA(x, prior_scale = prior_scale,

@@ -9,7 +9,7 @@
 
 log_likelihood <- function(x){
   # number of fitted models
-  models <- length(x)
+  #models <- length(x$mod_fit)
   # data used to fit models
   X <- x$stan_dat$X
   # number of nodes

@@ -55,6 +55,7 @@ median_par <- matrix(temp_results$median,  max(nodes))
 mode_par <- matrix(temp_results$mode,  max(nodes))
 summary_results  <- subset(summary_results,  Var1 != Var2)
 
+
 list(summary = data.frame(summary_results), matrices = list(mean_par = mean_par,
     median_par = median_par, mode_par = mode_par), par_mat = par_cor)
 

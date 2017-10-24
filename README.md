@@ -92,7 +92,7 @@ qgraph(par_corr_lasso$matrices$mean_par)
 ### Posterior predictive checks:
 A key aspect of Bayesian modeling is model checking. The idea is that our fitted models should generated data that looks like the observed data. The light blue lines are model implied data sets, and the dark lines are the observed outcome. Importantly, while the big 5 inventory is often used to demonstrate network models, these posterior predictive checks suggest that assuming normality is not adequatlely describing the data and that model should be revised. 
 
-(note: if relying on frequency properties, in that expectations are acheived for such data when assuming normality, they are sacrificing modeling what might be the data generating process and predictions (what we might care more about) will be non-optimal.
+(note: if relying on frequency properties, in that expectations are acheived for such data when assuming normality, one is likely sacrificing modeling what might be the data generating process and thus predictions (what we should care more about) will be non-optimal. That is, we could strive to do something useful with the present model, such as predicting responses, instead of relying on hypothetical data frequencies of an assumed model to justify our models.)
 
 ```{r}
 # posterior predictive

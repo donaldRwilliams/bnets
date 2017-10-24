@@ -100,7 +100,6 @@ ppc_plot(X, y_rep)
 ![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/y_rep.PNG)
 
 ### In sample fit:
-#### (Bayesian methods provide probability intervals)
 ```{r}
 fit_blasso <- in_sample_fit(mod_lasso, X, fit_index = "all", prior_scale = 0.01, node = 1:5, prob = 0.90)
 fit_blasso$summary_all

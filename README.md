@@ -51,7 +51,7 @@ loo <- global_out_of_sample(ll_lasso, fit_index = "loo")
 ```{r}
 ```
 ### Select models based on lowest LOOIC value:
-LOO wieghts are similar to AIC weights, and are often interpreted as the probability (conditioned on the models under consideration) of providing the best out-of-sample predictions. In this case, there is no clear model to select. Model averaging will be implemented soon.
+LOO weights are similar to AIC weights, and are often interpreted as the probability (conditioned on the models under consideration) of providing the best out-of-sample predictions. In this case, there is no clear model to select. Model averaging will be implemented soon.
 ```{r}
   prior_scale      elpd  elpd_se    looic looic_se    p_loo p_loo_se    loo_wt
 1        0.01 -1286.564 22.64423 2573.128 45.28846 71.86439 4.135112 0.5482525

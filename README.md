@@ -58,6 +58,17 @@ LOO weights are similar to AIC weights, and are often interpreted as the probabi
 2        0.50 -1287.371 23.22311 2574.742 46.44621 84.29675 4.691217 0.2446736
 3        0.10 -1287.538 23.17722 2575.076 46.35443 83.35517 4.624088 0.2070739
 ```
+### Compare models via LOOIC differences that a measure of uncertainty:
+Models differ in LOO, but this difference is uncertain.
+```{r}
+compare_global(loo)
+$results
+  prior_1 prior_2 elpd_diff elpd_se looic_diff looic_se
+1    0.01     0.1     0.974   2.201     -1.948    4.402
+2    0.01     0.5     0.807   2.434     -1.614    4.868
+3     0.1     0.5    -0.167   0.369      0.334    0.738
+```
+
 ### Compute partial correlation matrix:
 ```{r}
 par_corr_lasso <- partial_corr(mod_lasso, prior_scale = 0.01, prob = 0.90)

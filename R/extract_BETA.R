@@ -36,27 +36,6 @@ extract_BETA <- function(x, prior_scale, nodes = NULL, prob){
     dplyr::select(contains("b_int."), contains("sigma."),
            contains("lp__"))
 
-  # column names (only numbers) of BETA estiamtes
-  #temp_name <- colnames(BETA_est)
-  #BETA_numbs <- as.numeric(gsub("*\\D", "", colnames(BETA_est)))
-
-  # get number of nodes
-  #x_vars <- as.numeric(unlist(rm_between(cnames, ".", ".",
-                                         #extract = TRUE)))
-
-  # store unique variables
- # x_vars <- NULL
-
-  #for(i in 1:length(BETA_numbs)){
-   # temp <- BETA_numbs[i]
-
-    #if(temp < 100){
-     # x_vars[i] <- substr(temp, 1, nchar(temp) - 1)
-    #}else if(temp >= 100){
-     # x_vars[i] <- substr(temp, 1, nchar(temp) - 2)
-    #}
-  #}
-
   # unique variables, and get model sepecific BETAs
   # temporary variable in sequence
   x_vars <- length(unique(K))
@@ -67,8 +46,6 @@ extract_BETA <- function(x, prior_scale, nodes = NULL, prob){
   temp_dat <- lapply(temp_1[1:max(K)], function(x)   dplyr::select(BETA_est, contains(x)))
 
   names(temp_dat) <-  paste(rep("y", max(K)), 1:length(K), sep = "_")
-  #temp_4 <- as.numeric(substr(names(temp_dat), 3, 10) )
-  #temp_3 <- 1:x_vars
 
   # list to store (p - y)
   l <- list()

@@ -19,10 +19,11 @@ log_likelihood <- function(x){
   # prior scale (only numeric; remove letters)
   prior_scale <- as.numeric(gsub("[A-z]",
                  replacement = "", x =  names(x$mod_fit)))
-  # multidimensional array for log_likelihood (model specific)
+
+  prior_scale <- as.numeric(na.omit(prior_scale))
+   # multidimensional array for log_likelihood (model specific)
   store_log_lik <- array(NA , c(n_samples, nrow(X),
                                 length(prior_scale), ncol(X)))
-
   # double for loop
   for(i in 1:length(prior_scale)){
     prior_temp <- prior_scale[i]

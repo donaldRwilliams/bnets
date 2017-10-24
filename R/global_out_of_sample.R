@@ -8,7 +8,9 @@
 #' @useDynLib bnets, .registration = TRUE
 
 global_out_of_sample <- function(x, fit_index){
+
   prior_scale = x$prior_scale
+
   if (fit_index == "loo"){
     loo_list <- list()
     for(i in 1:length(prior_scale)){
@@ -22,7 +24,7 @@ global_out_of_sample <- function(x, fit_index){
     }
     mlt <- reshape2::melt(loo_temp) %>% group_by(L2, L1)
     df_temp <- reshape2::dcast(mlt, L1 ~ L2)[,-1]
-    colnames(df_temp) <- row.names(cbind(loo_list[[2]]))[1:6]
+    colnames(df_temp) <- row.names(cbind(loo_list[[1]]))[1:6]
     temp1 <- data.frame(prior_scale, df_temp)
 
     temp2 <- temp1 %>%
@@ -31,7 +33,7 @@ global_out_of_sample <- function(x, fit_index){
     delta <- temp2$looic - min(temp2$looic)
     rel_ll <- exp(-0.5 * delta)
     sum_ll <- sum(rel_ll)
-    loo_wt <- rel_ll / sum_LL
+    loo_wt <- rel_ll / sum_ll
 
     results <- data.frame(prior_scale = temp2$prior_scale,
                           elpd = temp2$elpd_loo,
@@ -57,7 +59,7 @@ global_out_of_sample <- function(x, fit_index){
     }
     mlt <- reshape2::melt(waic_temp) %>% group_by(L2, L1)
     df_temp <- reshape2::dcast(mlt, L1 ~ L2)[,-1]
-    colnames(df_temp) <- row.names(cbind(waic_list[[2]]))[1:6]
+    colnames(df_temp) <- row.names(cbind(waic_list[[1]]))[1:6]
     temp1 <- data.frame(prior_scale, df_temp)
     temp2 <- temp1 %>%
       arrange(desc(elpd_waic))
@@ -65,7 +67,7 @@ global_out_of_sample <- function(x, fit_index){
     delta <- temp2$looic - min(temp2$waic)
     rel_ll <- exp(-0.5 * delta)
     sum_ll <- sum(rel_ll)
-    waic_wt <- rel_ll / sum_LL
+    waic_wt <- rel_ll / sum_ll
 
     results <- data.frame(prior_scale = temp2$prior_scale,
                           elpd_waic = temp2$elpd_waic,

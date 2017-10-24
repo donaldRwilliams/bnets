@@ -1,4 +1,3 @@
-#' @export
 #' @import rstan
 #' @import parallel
 #' @import R1magic

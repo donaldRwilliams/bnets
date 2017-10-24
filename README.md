@@ -50,20 +50,30 @@ loo <- global_out_of_sample(ll_lasso, fit_index = "loo")
 ```
 ```{r}
 ```
-### Select models based on lowest LOOIC value:
+### Model assessement via approximate leave-one-out cross-validation (LOOIC = LOO information criterion):
+LOO weights are similar to AIC weights, and are often interpreted as the probability (conditioned on the models under consideration) of providing the best out-of-sample predictions. In this case, there is no clear model to select. Model averaging will be implemented soon.
 ```{r}
-loo$results
-  prior_scale      elpd  elpd_se    looic looic_se    p_loo p_loo_se
-1        0.01 -1286.438 22.66390 2572.877 45.32780 72.09085 4.133830
-2        0.10 -1286.635 23.17878 2573.269 46.35756 82.75012 4.592892
-3        0.50 -1288.412 23.27100 2576.824 46.54200 85.21935 4.739270
+  prior_scale      elpd  elpd_se    looic looic_se    p_loo p_loo_se    loo_wt
+1        0.01 -1286.564 22.64423 2573.128 45.28846 71.86439 4.135112 0.5482525
+2        0.50 -1287.371 23.22311 2574.742 46.44621 84.29675 4.691217 0.2446736
+3        0.10 -1287.538 23.17722 2575.076 46.35443 83.35517 4.624088 0.2070739
 ```
+### Compare models via LOOIC differences that include measure of uncertainty (standard error):
+```{r}
+compare_global(loo)
+$results
+  prior_1 prior_2 elpd_diff elpd_se looic_diff looic_se
+1    0.01     0.1     0.974   2.201     -1.948    4.402
+2    0.01     0.5     0.807   2.434     -1.614    4.868
+3     0.1     0.5    -0.167   0.369      0.334    0.738
+```
+
 ### Compute partial correlation matrix:
 ```{r}
 par_corr_lasso <- partial_corr(mod_lasso, prior_scale = 0.01, prob = 0.90)
 ```
-### Unlike classical methods that lack standard errors, Bayesain
-### methods provide intervals for the partial correlations:
+### Bayesian methods provide intervals for the partial correlations:
+(Unlike classical methods that typically lack standard errors)
 ```
 par_corr_lasso$summary[1:10,]
    Var1 Var2          mean      median          mode       lb_hdi     ub_hdi        lb_eq      ub_eq
@@ -91,16 +101,16 @@ qgraph(par_corr_lasso$matrices$mean_par)
 ![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/mean.PNG)
 
 ### Posterior predictive checks:
+A key aspect of Bayesian modeling is model checking. The idea is that our fitted models should generated data that looks like the observed data. The light blue lines are model implied data sets, and the dark lines are the observed outcome. Importantly, while the big 5 inventory is often used to demonstrate network models, these posterior predictive checks suggest that assuming normality is not adequatlely describing the data (e.g., the data has a lower bound of 1, yet the fitted model is predicting many values less than 1) and that the model should be revised. 
 ```{r}
 # posterior predictive
-y_rep <- posterior_predict_net(mod_lasso, X, prior_scale = 0.01, nsims = 500, node = 1)
+y_rep <- posterior_predict_net(mod_lasso, X, prior_scale = 0.01, nsims = 50, node = 1:10)
 # plot
-ppc_dens_overlay(X[,1], yrep =  y_rep$y_rep$node_1)
+ppc_plot(X, y_rep)
 ```
-![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/posterior_predict.PNG)
+![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/y_rep.PNG)
 
 ### In sample fit:
-#### (Bayesian methods provide probability intervals)
 ```{r}
 fit_blasso <- in_sample_fit(mod_lasso, X, fit_index = "all", prior_scale = 0.01, node = 1:5, prob = 0.90)
 fit_blasso$summary_all

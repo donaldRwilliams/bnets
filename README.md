@@ -58,7 +58,7 @@ LOO weights are similar to AIC weights, and are often interpreted as the probabi
 2        0.50 -1287.371 23.22311 2574.742 46.44621 84.29675 4.691217 0.2446736
 3        0.10 -1287.538 23.17722 2575.076 46.35443 83.35517 4.624088 0.2070739
 ```
-### Compare models via LOOIC differences that a measure of uncertainty:
+### Compare models via LOOIC differences that include measure of uncertainty (standard error):
 ```{r}
 compare_global(loo)
 $results

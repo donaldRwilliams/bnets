@@ -51,12 +51,12 @@ loo <- global_out_of_sample(ll_lasso, fit_index = "loo")
 ```{r}
 ```
 ### Select models based on lowest LOOIC value:
+LOO wieghts are similar to AIC weights, and are often interpreted as the probability (conditioned on the models under consideration) of providing the best out-of-sample predictions. In this case, there is no clear model to select. Model averaging will be implemented soon.
 ```{r}
-loo$results
-  prior_scale      elpd  elpd_se    looic looic_se    p_loo p_loo_se
-1        0.01 -1286.438 22.66390 2572.877 45.32780 72.09085 4.133830
-2        0.10 -1286.635 23.17878 2573.269 46.35756 82.75012 4.592892
-3        0.50 -1288.412 23.27100 2576.824 46.54200 85.21935 4.739270
+  prior_scale      elpd  elpd_se    looic looic_se    p_loo p_loo_se    loo_wt
+1        0.01 -1286.564 22.64423 2573.128 45.28846 71.86439 4.135112 0.5482525
+2        0.50 -1287.371 23.22311 2574.742 46.44621 84.29675 4.691217 0.2446736
+3        0.10 -1287.538 23.17722 2575.076 46.35443 83.35517 4.624088 0.2070739
 ```
 ### Compute partial correlation matrix:
 ```{r}
@@ -92,7 +92,7 @@ qgraph(par_corr_lasso$matrices$mean_par)
 ### Posterior predictive checks:
 A key aspect of Bayesian modeling is model checking. The idea is that our fitted models should generated data that looks like the observed data. The light blue lines are model implied data sets, and the dark lines are the observed outcome. Importantly, while the big 5 inventory is often used to demonstrate network models, these posterior predictive checks suggest that assuming normality is not adequatlely describing the data and that model should be revised. 
 
-(note: if relying on frequency properties, in that expectations are acheived for such data when assuming normality, one is likely sacrificing modeling what might be the data generating process and thus predictions (what we should care more about) will be non-optimal. That is, we could strive to do something useful with the present model, such as predicting responses, instead of relying on hypothetical data frequencies of an assumed model to justify our models.)
+(note: if relying on frequency properties, in that expectations are acheived for such data when assuming normality, one is likely sacrificing modeling what might be the data generating process and thus predictions (what we should care more about) will be non-optimal. We could strive to do something useful with the present model, such as predicting responses, instead of relying on hypothetical data frequencies to justify using a model that does not describe the observed data).
 
 ```{r}
 # posterior predictive

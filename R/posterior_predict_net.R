@@ -9,6 +9,7 @@
 
 posterior_predict_net <- function(x, X, prior_scale = NULL, node, nsims){
       X <- na.omit(X)
+      K <- x$stan_dat$K
         if(length(x) > 1 && is.null(prior_scale)){
              stop("detected > 1 model. must specify prior scale for model to compute posterior predictive")
           }
@@ -39,7 +40,7 @@ posterior_predict_net <- function(x, X, prior_scale = NULL, node, nsims){
               # backtransform to raw scale
       for(j in 1:nrow(beta)){
               t <- beta[j,]
-              mat[j, 1: K] <- scaleBack.lm(X[-node_temp], X[,node_temp], as.numeric(t))
+              mat[j, 1:K] <- scaleBack.lm(X[-node_temp], X[,node_temp], as.numeric(t))
               }
           # model matrix
           X_yrp <- data.frame(1, X[,-node_temp])
@@ -49,3 +50,12 @@ posterior_predict_net <- function(x, X, prior_scale = NULL, node, nsims){
 names(y_rep) <- paste("node", node, sep = "_")
 list(y_rep = y_rep)
 }
+
+
+
+
+
+
+
+
+

@@ -171,6 +171,6 @@ list(bayes_MSE = results_MSE, posterior_samples = dat_MSE)
               mode = mode(value),
               lb_hdi = hdi(value, prob)[1],
               ub_hdi = hdi(value, prob)[2])
-  list(summary_all = all_results, bayes_r2 = bayes_r2,
+  list(summary_all = data.frame(all_results), bayes_r2 = bayes_r2,
        bayes_MSE = bayes_MSE, bayes_RMSE = bayes_RMSE)
 }

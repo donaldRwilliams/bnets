@@ -91,11 +91,12 @@ qgraph(par_corr_lasso$matrices$mean_par)
 ![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/mean.PNG)
 
 ### Posterior predictive checks:
+#### A key aspect of Bayesian modeling is model checking. The idea is that our fitted models should generated data that looks like the observed data. The light blue lines are model implied replications, and the dark lines are the observed outcome.
 ```{r}
 # posterior predictive
-y_rep <- posterior_predict_net(mod_lasso, X, prior_scale = 0.01, nsims = 500, node = 1)
+y_rep <- posterior_predict_net(mod_lasso, X, prior_scale = 0.01, nsims = 50, node = 1:10)
 # plot
-ppc_dens_overlay(X[,1], yrep =  y_rep$y_rep$node_1)
+ppc_plot(X, y_rep)
 ```
 ![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/y_rep.PNG)
 

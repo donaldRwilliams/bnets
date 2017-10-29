@@ -12,7 +12,11 @@ partial_corr <- function(x, prior_scale, prob){
   temp <- (x$iter * x$chains) / 2
   n_samples <- 1:temp
   list_beta <- list()
+
+  pb <- txtProgressBar(min = 0, max = max(nodes), style = 3)
+
 for(i in 1:length(nodes)){
+  setTxtProgressBar(pb, i)
   temp_node <- nodes[i]
   list_beta[[i]]  <- extract_BETA(x, prior_scale = prior_scale,
                                   nodes = temp_node, prob = 0.50)$posterior_sample_BETA
@@ -34,12 +38,20 @@ for(j in 1:length(n_samples)){
   }
 
 t <- reshape2::melt(par_cor)
+t <- t %>% mutate(Var1 = rep(colnames(x$stan_dat$X), length(Var1) / max(nodes)))
+t$Var2 <- rep(colnames(x$stan_dat$X), each = max(nodes))
 
-temp_results <- t %>%
+t1  <- t %>%
+  filter(value != 0)
+
+temp_results <- t1 %>%
   group_by(Var1, Var2) %>%
   summarise(mean = mean(value),
   median = median(value),
   mode = mode(value),
+  post_sd = sd(value),
+  psuedo_z = mean(value) / sd(value),
+  ev.ratio = sum(value > 0) / sum(value < 0),
   lb_hdi = hdi(value, prob)[1],
   ub_hdi = hdi(value, prob)[2],
   lb_eq  = quantile(value, (1- prob)/ 2),
@@ -50,13 +62,20 @@ summary_results <- temp_results[!duplicated(apply(temp_results,1,function(x)
 
 
 
+
+
 mean_par <- matrix(temp_results$mean,  max(nodes))
 median_par <- matrix(temp_results$median,  max(nodes))
 mode_par <- matrix(temp_results$mode,  max(nodes))
+
+colnames(mean_par) <- colnames(x$stan_dat$X)
+colnames(median_par) <- colnames(x$stan_dat$X)
+colnames(mode_par) <- colnames(x$stan_dat$X)
+
 summary_results  <- subset(summary_results,  Var1 != Var2)
 
 
 list(summary = data.frame(summary_results), matrices = list(mean_par = mean_par,
-    median_par = median_par, mode_par = mode_par), par_mat = par_cor)
+    median_par = median_par, mode_par = mode_par), par_mat = par_cor, df_post = t)
 
 }

@@ -26,7 +26,7 @@ extract_BETA <- function(x, prior_scale, nodes = NULL, prob){
 
   temp <- data.frame(rstan::extract(x$mod_fit[[temp_extract]]))
 
-  if(is.numeric(x$stan_dat$lasso_scale)){
+  if(is.numeric(x$stan_dat$lasso_scale) | is.numeric(x$ridge)){
   # select all BETA estiamtes
   BETA_est <- temp %>%
     dplyr::select(starts_with("b."))

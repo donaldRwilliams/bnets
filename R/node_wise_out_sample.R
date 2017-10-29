@@ -54,6 +54,7 @@ if(models < length(prior_scale)){
                 prior_scales_2 = for_mapply[,2],
                 node = for_mapply[,5],
                 elpd_loo_diff = m[,1], elpd_se = m[,2],
-                looic_diff = -2 * m[,1], looic_se = 2 * m[,2])
+                looic_diff = -2 * m[,1], looic_se = 2 * m[,2],
+                loo_z = (-2 * m[,1]) /  (2 * m[,2]))
   list(results = res)
 }

@@ -38,7 +38,7 @@ bhs_net <- function(X, models, prior_scale = 1, nu_global = 1,
 
   # fit model
   mod_fit <- sampling(stanmodels$hs, data = stan_dat,
-                  chains = chains, iter = iter,
+                  chains = chains, iter = iter, refresh = 0,
                   control = list(adapt_delta = adapt_delta,
                                  max_treedepth = max_treedepth))
 
@@ -61,7 +61,7 @@ bhs_net <- function(X, models, prior_scale = 1, nu_global = 1,
 
       # fit model
       mod_fit[[i]] <- sampling(stanmodels$hs, data = stan_dat,
-                          chains = chains, iter = iter,
+                          chains = chains, iter = iter, refresh = 0,
                           control = list(adapt_delta = adapt_delta,
                                          max_treedepth = max_treedepth))
     }

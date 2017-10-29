@@ -11,15 +11,15 @@
 compare_global <- function(x){
 
   # get list names that correspond to priors
-  list_names <- names(loo$loo_list)
+  list_names <- names(x$loo_list)
 
   # combn to evaluate pairwise loo
   assess_values <- t(combn(list_names , 2))
 
   # function for mapply
   fun_mapply <- function(prior_scale_1, prior_scale_2){
-      loo::compare(loo$loo_list[[prior_scale_1]],
-                   loo$loo_list[[prior_scale_2]])
+      loo::compare(x$loo_list[[prior_scale_1]],
+                   x$loo_list[[prior_scale_2]])
     }
 
   # temporary results

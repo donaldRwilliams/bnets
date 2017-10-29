@@ -24,9 +24,11 @@ log_likelihood <- function(x){
    # multidimensional array for log_likelihood (model specific)
   store_log_lik <- array(NA , c(n_samples, nrow(X),
                                 length(prior_scale), ncol(X)))
+  pb <- txtProgressBar(min = 0, max = length(prior_scale), style = 3)
   # double for loop
   for(i in 1:length(prior_scale)){
     prior_temp <- prior_scale[i]
+    setTxtProgressBar(pb, i)
   for(k in 1:length(nodes)){
     node_temp <- nodes[k]
     # temporary beta extraction

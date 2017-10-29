@@ -8,7 +8,7 @@
 
 #X <- bfi[1:100, 1:10]
 
-posterior_predict <- function(x, X, prior_scale = NULL, nodes, nsims){
+posterior_predict <- function(x, X, prior_scale = NULL, nsims){
       K <- x$stan_dat$K
       X <- na.omit(X)
       if(length(x) > 1 && is.null(prior_scale)){
@@ -51,8 +51,9 @@ posterior_predict <- function(x, X, prior_scale = NULL, nodes, nsims){
           y_rep[[i]] = t(sapply(1:nsims, function(s) rnorm(length(X_yrp[,1]),
                                                      as.matrix(X_yrp) %*% mat[s,], sig[s])))
           }
-names(y_rep) <- paste("node", nodes, sep = "_")
-list(y_rep = y_rep, nsims = nsims, nodes = nodes, data = X)
+#names(y_rep) <- paste("node", nodes, sep = "_")
+names(y_rep) <- colnames(X)
+list(y_rep = y_rep, nsims = nsims, data = X)
 }
 
 #length(temp$posterior_samples_not_BETA$y_1_sigma)

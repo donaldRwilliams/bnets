@@ -47,8 +47,10 @@ var_e <- apply(e, 1, var)
 r_2 <- var_yhat / (var_yhat + var_e)
 bayes_r2[[i]] <- r_2
 }
+names(bayes_r2) <-   colnames(x$stan_dat$X[,node])
 dat_r2 <- data.frame(bayes_r2)
-names(bayes_r2) <- paste("node", node, sep = "_")
+#names(bayes_r2) <- paste("node", node, sep = "_")
+#names(bayes_r2) <-   colnames(x$stan_dat$X[nodes])
 mlt_bayes_r2 <- reshape2::melt(bayes_r2)
 results_r2 <- mlt_bayes_r2 %>%
   group_by(L1) %>%
@@ -57,7 +59,7 @@ results_r2 <- mlt_bayes_r2 %>%
             mode = mode(value),
             lb_hdi = hdi(value, prob)[1],
             ub_hdi = hdi(value, prob)[2])
-list(bayes_r2 = results_r2, posterior_sample = dat_r2)
+list(bayes_r2 = data.frame(results_r2), posterior_sample = dat_r2)
 }
 
 else if(fit_index == "bayes_MSE"){
@@ -84,7 +86,13 @@ else if(fit_index == "bayes_MSE"){
       }
     bayes_MSE[[i]] <- temp_mse
   }
-    names(bayes_MSE) <- paste("node", node, sep = "_")
+
+  #names(bayes_r2) <-   colnames(x$stan_dat$X[,node])
+  #dat_r2 <- data.frame(bayes_r2)
+  #names(bayes_r2) <- paste("node", node, sep = "_")
+  #names(bayes_r2) <-   colnames(x$stan_dat$X[nodes])
+  #mlt_bayes_r2 <- reshape2::melt(bayes_r2)
+    names(bayes_MSE) <- colnames(x$stan_dat$X[,node])
     dat_MSE <- data.frame(bayes_MSE)
     mlt_bayes_MSE <- reshape2::melt(bayes_MSE)
     results_MSE <- mlt_bayes_MSE %>%
@@ -95,7 +103,9 @@ else if(fit_index == "bayes_MSE"){
               lb_hdi = hdi(value, prob)[1],
               ub_hdi = hdi(value, prob)[2])
 list(bayes_MSE = results_MSE, posterior_samples = dat_MSE)
-}else if(fit_index == "bayes_RMSE"){
+}
+
+else if(fit_index == "bayes_RMSE"){
   node_loop <- node
   pb <- txtProgressBar(min = 0, max = max(node_loop), style = 3)
   for(i in 1:length(node_loop)){
@@ -118,7 +128,7 @@ list(bayes_MSE = results_MSE, posterior_samples = dat_MSE)
   }
     bayes_RMSE[[i]] <- temp_rmse
   }
-  names(bayes_RMSE) <- paste("node", node, sep = "_")
+  names(bayes_RMSE) <- colnames(x$stan_dat$X[,node])
   dat_RMSE <- data.frame(bayes_RMSE)
   mlt_bayes_RMSE <- reshape2::melt(bayes_RMSE)
   results_RMSE <- mlt_bayes_RMSE %>%
@@ -162,13 +172,13 @@ list(bayes_MSE = results_MSE, posterior_samples = dat_MSE)
     bayes_MSE[[i]] <- temp_mse
     bayes_RMSE[[i]] <- temp_rmse
 }
-  names(bayes_r2) <- paste("node", node, sep = "_")
-  names(bayes_MSE) <- paste("node", node, sep = "_")
-  names(bayes_RMSE) <- paste("node", node, sep = "_")
-  }
+  names(bayes_r2) <- colnames(x$stan_dat$X[,node])
+  names(bayes_MSE) <- colnames(x$stan_dat$X[,node])
+  names(bayes_RMSE) <- colnames(x$stan_dat$X[,node])
+
 
   c_all <- rbind.data.frame(bayes_r2, bayes_MSE, bayes_RMSE)
-  c_all$fit_index <- rep(c("bayes_r2", "bayes_MSE", "bayes_RMSE"), each = 4000)
+  c_all$fit_index <- rep(c("bayes_r2", "bayes_MSE", "bayes_RMSE"), each = (x$iter * x$chains) / 2)
   mlt_call <- suppressMessages(reshape2::melt(c_all))
 
   all_results <- mlt_call %>% group_by(variable, fit_index) %>%
@@ -179,4 +189,4 @@ list(bayes_MSE = results_MSE, posterior_samples = dat_MSE)
               ub_hdi = hdi(value, prob)[2])
   list(summary_all = data.frame(all_results), bayes_r2 = bayes_r2,
        bayes_MSE = bayes_MSE, bayes_RMSE = bayes_RMSE)
-}
+}}

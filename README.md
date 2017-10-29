@@ -58,7 +58,7 @@ LOO weights are similar to AIC weights, and are often interpreted as the probabi
 2        0.50 -1287.371 23.22311 2574.742 46.44621 84.29675 4.691217 0.2446736
 3        0.10 -1287.538 23.17722 2575.076 46.35443 83.35517 4.624088 0.2070739
 ```
-### Compare models via LOOIC differences that include measure of uncertainty (standard error):
+### Compare models via LOOIC differences that include a measure of uncertainty (standard error):
 ```{r}
 compare_global(loo)
 $results
@@ -75,18 +75,17 @@ par_corr_lasso <- partial_corr(mod_lasso, prior_scale = 0.01, prob = 0.90)
 ### Bayesian methods provide intervals for the partial correlations:
 (Unlike classical methods that typically lack standard errors)
 ```
-par_corr_lasso$summary[1:10,]
-   Var1 Var2          mean      median          mode       lb_hdi     ub_hdi        lb_eq      ub_eq
-1     1    2 -0.0876583794 -0.08570979 -2.033863e-03 -0.178225669 0.00000000 -0.199803674 0.00000000
-2     1    3 -0.0090959536  0.00000000  2.543054e-04 -0.071883489 0.03953284 -0.071527051 0.04018490
-3     1    4  0.0541886080  0.04519627  9.370606e-04  0.000000000 0.14595439  0.000000000 0.16017500
-4     1    5 -0.0726108048 -0.06873063 -1.793063e-03 -0.156611130 0.00000000 -0.171409451 0.00000000
-5     1    6  0.0005768901  0.00000000 -2.666742e-04 -0.054006828 0.05503979 -0.054015200 0.05502283
-6     1    7 -0.0133036786  0.00000000  6.192118e-05 -0.076045259 0.03413132 -0.079492079 0.03169498
-7     1    8  0.0050352558  0.00000000  7.230252e-05 -0.045944091 0.06237797 -0.045896976 0.06286394
-8     1    9  0.0208020712  0.00000000  2.418707e-04 -0.026126197 0.09492174 -0.024757211 0.09661200
-9     1   10  0.0323693183  0.01781611  3.977780e-04 -0.002002034 0.11743047 -0.006678188 0.11335299
-10    2    3  0.1029003692  0.10023844  9.684066e-02  0.000000000 0.19354966  0.000000000 0.22063858
+par_corr_lasso$summary[1:9,]
+  Var1 Var2   mean median   mode post_sd psuedo_z ev.ratio lb_hdi ub_hdi  lb_eq  ub_eq
+1    1    2 -0.193 -0.191 -0.185   0.075   -2.571    0.001 -0.315 -0.066 -0.321 -0.071
+2    1    3  0.040  0.050  0.057   0.084    0.478    2.414 -0.113  0.161 -0.105  0.171
+3    1    4  0.211  0.209  0.201   0.078    2.709  961.750  0.089  0.343  0.083  0.338
+4    1    5 -0.179 -0.177 -0.175   0.075   -2.401    0.002 -0.298 -0.053 -0.306 -0.060
+5    1    6  0.064  0.066  0.060   0.078    0.820    4.471 -0.072  0.187 -0.075  0.186
+6    1    7 -0.103 -0.103 -0.090   0.072   -1.433    0.069 -0.231 -0.004 -0.217  0.026
+7    1    8  0.076  0.078  0.076   0.075    1.017    6.029 -0.046  0.207 -0.062  0.195
+8    1    9  0.031  0.042  0.056   0.086    0.363    1.945 -0.114  0.157 -0.112  0.161
+9    1   10  0.133  0.130  0.116   0.070    1.902   60.250  0.021  0.241  0.029  0.250
 ```
 ### We can choose the partial correlation mean, median, or mode.
 ##### 1) Mode:
@@ -101,7 +100,7 @@ qgraph(par_corr_lasso$matrices$mean_par)
 ![Optional Text](https://github.com/donaldRwilliams/images_bnets/blob/master/mean.PNG)
 
 ### Posterior predictive checks:
-A key aspect of Bayesian modeling is model checking. The idea is that our fitted models should generated data that looks like the observed data. The light blue lines are model implied data sets, and the dark lines are the observed outcome. Importantly, while the big 5 inventory is often used to demonstrate network models, these posterior predictive checks suggest that assuming normality is not adequatlely describing the data (e.g., the data has a lower bound of 1, yet the fitted model is predicting many values less than 1) and that the model should be revised. 
+A key aspect of Bayesian modeling is model checking. The idea is that our fitted models should generated data that looks like the observed data. The light blue lines are model implied data sets, and the dark lines are the observed outcomes. Importantly, while the big 5 inventory is often used to demonstrate network models, these posterior predictive checks suggest that assuming normality is not adequatlely describing the data (e.g., the data has a lower bound of 1, yet the fitted model is predicting many values less than 1) and that the model should be revised. 
 ```{r}
 # posterior predictive
 y_rep <- posterior_predict_net(mod_lasso, X, prior_scale = 0.01, nsims = 50, node = 1:10)

@@ -86,7 +86,10 @@ colnames(mode_par) <- colnames(x$stan_dat$X)
 summary_results  <- subset(summary_results,  Var1 != Var2)
 
 
-list(summary = data.frame(summary_results), matrices = list(mean_par = mean_par,
-    median_par = median_par, mode_par = mode_par), par_mat = par_cor, df_post = t1 )
+t <- list(summary = data.frame(summary_results), matrices = list(mean_par = mean_par,
+     median_par = median_par, mode_par = mode_par), par_mat = par_cor, df_post = t1 )
+
+class(t) <- append(class(t),"partial_corr")
+return(t)
 
 }

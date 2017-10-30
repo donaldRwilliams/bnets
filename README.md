@@ -103,7 +103,7 @@ qgraph(par_corr_lasso$matrices$mean_par)
 A key aspect of Bayesian modeling is model checking. The idea is that our fitted models should generated data that looks like the observed data. The light blue lines are model implied data sets, and the dark lines are the observed outcomes. Importantly, while the big 5 inventory is often used to demonstrate network models, these posterior predictive checks suggest that assuming normality is not adequatlely describing the data (e.g., the data has a lower bound of 1, yet the fitted model is predicting many values less than 1) and that the model should be revised. 
 ```{r}
 # posterior predictive
-y_rep <- posterior_predict_net(mod_lasso, X, prior_scale = 0.01, nsims = 50, node = 1:10)
+y_rep <- posterior_predict(mod_lasso, X, prior_scale = 0.01, nsims = 50, node = 1:10)
 # plot
 ppc_plot(X, y_rep)
 ```

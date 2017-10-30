@@ -8,7 +8,7 @@
 #' @useDynLib bnets, .registration = TRUE
 
 
-edge_decision_rule <- function(x, type, point_est = NULL,  prob = NULL, cutoff = NULL){
+edge_decision_rule <- function(x, type, point_est = NULL,  prob = NULL, cutoff = NULL, direction = NULL){
   if(!is(x, "partial_corr")){
     stop("x is not of class partial_corr")
   }
@@ -82,7 +82,39 @@ if(type == "psuedo_z"){
     parcor_mat <- matrix(parcor_cut, nodes, nodes)
     diag(parcor_mat) <- 1
     return(parcor_mat)
+  }}else if(type == "post_prob"){
+    if(is.null(direction)){
+      stop("Must specify direction")
+    }else if(direction == "greater"){
+      post_prob_est <- d_temp %>% group_by(Var1, Var2) %>% summarise(pp = sum(value > 0) / length(value))
+      post_prob_mat <- matrix(post_prob_est$pp, nodes, nodes)
+      diag(post_prob_mat) <- 1
+      if(is.null(cutoff)){
+        return(post_prob_mat)
+      } else{
+        if(cutoff > 1){
+          stop("Cutoff must be between 0 and 1")
+        }
+        pp_cut <- ifelse(post_prob_est$pp  > cutoff, post_prob_est$pp, 0)
+        pp_mat <- matrix(pp_cut, nodes, nodes)
+        return(pp_mat)
+      }
+}else if(direction == "lesser"){
+    post_prob_est <- d_temp %>% group_by(Var1, Var2) %>% summarise(pp = sum(value < 0) / length(value))
+    post_prob_mat <- matrix(post_prob_est$pp, nodes, nodes)
+    diag(post_prob_mat) <- 1
+    if(is.null(cutoff)){
+      return(post_prob_mat)
+    } else{
+      if(cutoff > 1){
+        stop("Cutoff must be between 0 and 1")
+      }
+      pp_cut <- ifelse(post_prob_est$pp  > cutoff, post_prob_est$pp, 0)
+      pp_mat <- matrix(pp_cut, nodes, nodes)
+      return(pp_mat)
+    }
   }
-}}
+}
+}
 
 

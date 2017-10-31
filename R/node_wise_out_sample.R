@@ -8,7 +8,6 @@
 #' @useDynLib bnets, .registration = TRUE
 
 node_wise_out_of_sample <- function(x, prior_scale, nodes){
-
   log_lik <- x$log_lik
   models <- length(x$prior_scale)
   mod_scales <- x$prior_scale

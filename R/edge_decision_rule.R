@@ -56,10 +56,12 @@ if(type == "psuedo_z"){
   if(is.null(prob)){
     stop("Must specify HDI probability")
   } else{
-    hdi_est <- d_temp %>% group_by(Var1, Var2) %>% summarise(low = hdi(value, prob)[1], up = hdi(value, prob)[2])
-    hdi_cut <- ifelse(hdi_est$low < 0 & hdi_est$up < 0, -1, ifelse(hdi_est$low > 0 & hdi_est$up > 0, 1, 0))
-    hdi_mat <- matrix(hdi_mat, nodes, nodes)
-    return(hdi_mat)
+    hdi_est <- par_mod_1$df_post  %>% group_by(Var1, Var2) %>% summarise(m_value = mean(value), low = hdi(value, prob)[1], up = hdi(value, prob)[2])
+    hdi_cut <- ifelse(hdi_est$low < 0 & hdi_est$up < 0, 1, ifelse(hdi_est$low > 0 & hdi_est$up > 0, 1, 0))
+    hdi_cut_mat <- matrix(hdi_cut, nodes, nodes)
+    hdi_mat <- matrix(hdi_est$m_value, nodes, nodes)
+    sig_mat <- hdi_mat * hdi_cut
+    return(sig_mat)
   }
 } else if (type == "par_cor"){
   if(is.null(cutoff) | is.null(point_est)){
@@ -113,7 +115,12 @@ if(type == "psuedo_z"){
       pp_mat <- matrix(pp_cut, nodes, nodes)
       return(pp_mat)
     }
+}else if(type = "pseudo_p"){
+
+  d <- 36
+  print(d)
   }
+
 }
 }
 

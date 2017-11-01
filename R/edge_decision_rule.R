@@ -115,13 +115,7 @@ if(type == "psuedo_z"){
       pp_mat <- matrix(pp_cut, nodes, nodes)
       return(pp_mat)
     }
-}else if(type = "pseudo_p"){
-
-  d <- 36
-  print(d)
-  }
-
-}
+}}
 }
 
 

@@ -33,11 +33,11 @@ proj_pred_blasso <- function(x, prior_scale){
   names(beta_list) <- colnames(x$stan_dat$X)
 
   for(i in 1:length(beta_list)){
-    temp_dat <- rbind(beta_list[[1]]$int_temp, t(beta_list[[1]] %>%
+    temp_dat <- rbind(beta_list[[i]]$int_temp, t(beta_list[[i]] %>%
                                                    select(contains("x"))))
 
-    search_path[[i]] <- lm_fprojsel(temp_dat, beta_list[[1]]$sigma_temp^2,
-                                    cbind(rep(1, x$stan_dat$N) , x$stan_dat$X[,-1]))
+    search_path[[i]] <- lm_fprojsel(temp_dat, beta_list[[i]]$sigma_temp^2,
+                                    cbind(rep(1, x$stan_dat$N) , x$stan_dat$X[,-i]))
 
   }
 
@@ -72,14 +72,14 @@ proj_pred_blasso <- function(x, prior_scale){
 
     }
   }
-  for(i in 1:length(search_path)){
-    search_temp <- search_path[[i]]
-    for(k in 1:nrow(mse_mat)) {
-      list_res[[i]] <- list(spath = search_temp$chosen,
+
+    for(k in 1:ncol(mse_mat)) {
+      search_temp <- search_path[[k]]
+      list_res[[k]] <- list(spath = search_temp$chosen,
                             col_names = colnames(x$stan_dat$X[,search_temp$chosen]),
                             kl_dist = search_temp$kl,  mse = mse_mat[,k], mlpd= mlpd_mat[,k])
     }
-  }
+
   names(list_res) <- colnames(x$stan_dat$X)
   list(search_results = list_res, beta_list = beta_list)
 }

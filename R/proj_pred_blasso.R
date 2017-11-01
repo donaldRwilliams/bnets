@@ -75,8 +75,11 @@ proj_pred_blasso <- function(x, prior_scale){
 
     for(k in 1:ncol(mse_mat)) {
       search_temp <- search_path[[k]]
+      c_name_temp <- colnames(x$stan_dat$X[,search_temp$chosen])
+      c_name <- c("int", colnames(x$stan_dat$X[,-k]))
+
       list_res[[k]] <- list(spath = search_temp$chosen,
-                            col_names = colnames(x$stan_dat$X[,search_temp$chosen]),
+                            col_names = c_name[search_temp$chosen],
                             kl_dist = search_temp$kl,  mse = mse_mat[,k], mlpd= mlpd_mat[,k])
     }
 

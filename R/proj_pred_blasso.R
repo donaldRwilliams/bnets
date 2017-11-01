@@ -75,7 +75,7 @@ proj_pred_blasso <- function(x, prior_scale){
 
       list_res[[k]] <- list(spath = search_temp$chosen,
                             col_names = c_name[search_temp$chosen],
-                            kl_dist = search_temp$kl,  mse = mse_mat[,k], mlpd= mlpd_mat[,k])
+                            kl_dist = search_temp$kl, mse = mse_mat[,k], mlpd= mlpd_mat[,k])
     }
 
   names(list_res) <- colnames(x$stan_dat$X)
@@ -117,8 +117,6 @@ lm_fprojsel <- function(w, sigma2, x) {
   return(list(chosen=chosen, kl=kl))
 }
 
-
-
 lm_proj <- function(w,sigma2,x,indproj) {
 
   # assume the intercept term is stacked into w, and x contains
@@ -136,7 +134,6 @@ lm_proj <- function(w,sigma2,x,indproj) {
 
   # this is the estimated kl-divergence between the full and projected model
   kl <- mean(0.5*log(sigma2p/sigma2))
-
   # reshape wp so that it has same dimensionality as x, and zeros for
   # those variables that are not included in the projected model
   d <- dim(w)[1]
@@ -147,8 +144,3 @@ lm_proj <- function(w,sigma2,x,indproj) {
 
   return(list(w=wp, sigma2=sigma2p, kl=kl))
 }
-
-
-
-
-

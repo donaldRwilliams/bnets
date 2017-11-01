@@ -13,8 +13,6 @@ proj_pred_blasso <- function(x, prior_scale){
   beta_list <- list()
   search_path <- list()
   list_results <- list()
-  mlpd <- list()
-  mse <- list()
   d <- max(nodes) - 1
 
   for(i in 1:length(nodes)){
@@ -42,10 +40,7 @@ proj_pred_blasso <- function(x, prior_scale){
   }
 
   mse_mat <- matrix(NA, max(nodes), max(nodes))
-  mse_sd  <- matrix(NA, max(nodes), max(nodes))
   mlpd_mat <- matrix(NA, max(nodes), max(nodes))
-  store_log_lik <- array(NA , c(n_samples, nrow(x$stan_dat$X),
-                                length(search_path), max(nodes)))
 
   for(i in 1:length(search_path)){
     search_temp <- search_path[[i]]

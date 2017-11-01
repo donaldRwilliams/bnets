@@ -39,17 +39,6 @@ for(j in 1:length(n_samples)){
 
 t <- reshape2::melt(par_cor)
 
-if(!is.null(colnames(x$stan_dat$X))){
-  t <- t %>% mutate(Var1 = rep(colnames(x$stan_dat$X), length(Var1) / max(nodes)))
-  t$Var2 <- rep(colnames(x$stan_dat$X), each = max(nodes))
-
-
-} else {
-  t$Var1 = rep(1:length(nodes), length(t$value) / max(nodes))
-  t$Var2 = rep(1:length(nodes), each = max(nodes))
-}
-
-
 #t$Var2 <- rep(colnames(x$stan_dat$X), each = max(nodes))
 
 t1  <- t %>%
@@ -83,13 +72,24 @@ colnames(mean_par) <- colnames(x$stan_dat$X)
 colnames(median_par) <- colnames(x$stan_dat$X)
 colnames(mode_par) <- colnames(x$stan_dat$X)
 
+if(!is.null(colnames(x$stan_dat$X))){
+  t <- t %>% mutate(Var1 = rep(colnames(x$stan_dat$X), length(Var1) / max(nodes)))
+  t$Var2 <- rep(colnames(x$stan_dat$X), each = max(nodes))
+
+
+} else {
+  t$Var1 = rep(1:length(nodes), length(t$value) / max(nodes))
+  t$Var2 = rep(1:length(nodes), each = max(nodes))
+}
+
+
 summary_results  <- subset(summary_results,  Var1 != Var2)
 
 
-t <- list(summary = data.frame(summary_results), matrices = list(mean_par = mean_par,
+the_list <- list(summary = data.frame(summary_results), matrices = list(mean_par = mean_par,
      median_par = median_par, mode_par = mode_par), par_mat = par_cor, df_post = t1 )
 
-class(t) <- append(class(t),"partial_corr")
-return(t)
+class(the_list) <- append(class(the_list),"partial_corr")
+return(the_list)
 
 }

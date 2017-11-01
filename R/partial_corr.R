@@ -44,6 +44,15 @@ t <- reshape2::melt(par_cor)
 t1  <- t %>%
   filter(value != 0)
 
+if(!is.null(colnames(x$stan_dat$X))){
+  t1 <- t %>% mutate(Var1 = rep(colnames(x$stan_dat$X), length(Var1) / max(nodes)))
+  t1$Var2 <- rep(colnames(x$stan_dat$X), each = max(nodes))
+
+} else {
+  t1$Var1 = rep(1:length(nodes), length(t$value) / max(nodes))
+  t1$Var2 = rep(1:length(nodes), each = max(nodes))
+}
+
 temp_results <- t1 %>%
   group_by(Var1, Var2) %>%
   summarise(mean = mean(value),
@@ -61,26 +70,30 @@ summary_results <- temp_results[!duplicated(apply(temp_results,1,function(x)
                                paste(sort(x),collapse=''))),]
 
 
+t2 <- t %>%
+   filter(value != 0)
+mat_results <- t2 %>%
+  group_by(Var1, Var2) %>%
+  summarise(mean = mean(value),
+            median = median(value),
+            mode = mode(value),
+            post_sd = sd(value),
+            psuedo_z = mean(value) / sd(value),
+            ev.ratio = sum(value > 0) / sum(value < 0),
+            lb_hdi = hdi(value, prob)[1],
+            ub_hdi = hdi(value, prob)[2],
+            lb_eq  = quantile(value, (1- prob)/ 2),
+            ub_eq  = quantile(value, 1 - ((1- prob)/ 2)))
 
 
 
-mean_par <- matrix(temp_results$mean,  max(nodes))
-median_par <- matrix(temp_results$median,  max(nodes))
-mode_par <- matrix(temp_results$mode,  max(nodes))
+mean_par <- matrix(mat_results$mean,  max(nodes))
+median_par <- matrix(mat_results$median,  max(nodes))
+mode_par <- matrix(mat_results$mode,  max(nodes))
 
 colnames(mean_par) <- colnames(x$stan_dat$X)
 colnames(median_par) <- colnames(x$stan_dat$X)
 colnames(mode_par) <- colnames(x$stan_dat$X)
-
-if(!is.null(colnames(x$stan_dat$X))){
-  t <- t %>% mutate(Var1 = rep(colnames(x$stan_dat$X), length(Var1) / max(nodes)))
-  t$Var2 <- rep(colnames(x$stan_dat$X), each = max(nodes))
-
-
-} else {
-  t$Var1 = rep(1:length(nodes), length(t$value) / max(nodes))
-  t$Var2 = rep(1:length(nodes), each = max(nodes))
-}
 
 
 summary_results  <- subset(summary_results,  Var1 != Var2)

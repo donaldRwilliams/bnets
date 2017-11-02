@@ -7,6 +7,7 @@
 #' @import reshape2
 #' @useDynLib bnets, .registration = TRUE
 
+
 centrality_contrasts <- function(x, contrast_list, prob){
   df_cont <-   as_tibble(test[[2]])
   c_list <- list()
@@ -23,11 +24,17 @@ centrality_contrasts <- function(x, contrast_list, prob){
                           up_hdi = hdi(value, prob)[2])
 
   }
-names(c_list) <- l
+t <- (t(unlist(l)))
+t2 <-  data.frame(t(matrix(t, 3)))
 c <- reshape2::melt(c_list)
 c_temp <- reshape2::dcast(c, L1 ~ variable)
-colnames(c_temp)[1] <- "contrast"
-list(contrast_results = c_temp)
+res <- data.frame(t2, c_temp)
+res <- res[,-4]
+#colnames(c_temp)[1] <- "contrast"
+#c_temp$contrast <- t2
+colnames(res)[1] <- "Measure"
+colnames(res)[2] <- "node_1"
+colnames(res)[3] <- "node_2"
+
+list(contrast_results = res)
 }
-
-

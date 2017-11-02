@@ -32,30 +32,29 @@ for(i in 1:length(p_)){
     cent_list[[i]] <-  centralityTable(p_[[i]], standardized = TRUE)[,3:5]
   }
 }
-t_mlt <- suppressMessages(reshape2::melt(between_list))
+t_mlt <- suppressMessages(reshape2::melt(cent_list))
 t_mlt$node <- colnames(x$stan_dat)
-
 if(point_est_cent == "mean"){
 
-t_mlt <- t_mlt %>%
+t_mlt2 <- t_mlt %>%
   group_by(node, measure) %>%
-  summarise(mean_cent = mean(value),
+  summarise(cent = mean(value),
   low_hdi = hdi(value, prob_cent)[1],
   up_hdi = hdi(value, prob_cent)[2])
 
 }else if(point_est_cent == "mode"){
-  t_mlt <- t_mlt %>%
+  t_mlt2 <- t_mlt %>%
     group_by(node, measure) %>%
-    summarise(mode_cent = mean(value),
+    summarise(cent = mean(value),
               low_hdi = hdi(value, prob_cent)[1],
               up_hdi = hdi(value, prob_cent)[2])
 
 }else if(point_est_cent == "median"){
-  t_mlt <- t_mlt %>%
+  t_mlt2 <- t_mlt %>%
     group_by(node, measure) %>%
-    summarise(mode_cent = mean(value),
+    summarise(cent = mean(value),
               low_hdi = hdi(value, prob_cent)[1],
               up_hdi = hdi(value, prob_cent)[2])
 }
-list(centrality_indices = t_mlt)
+list(centrality_indices = as.data.frame(t_mlt2), posterior_samples = t_mlt)
 }

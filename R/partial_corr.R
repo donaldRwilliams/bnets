@@ -5,10 +5,12 @@
 #' @import HDInterval
 #' @import dplyr
 #' @import reshape2
+#' @import data.table
 #' @useDynLib bnets, .registration = TRUE
 
 partial_corr <- function(x, prior_scale, prob){
   nodes  <- 1:x$stan_dat$K
+
   temp <- (x$iter * x$chains) / 2
   n_samples <- 1:temp
   list_beta <- list()
@@ -69,40 +71,27 @@ temp_results <- t1 %>%
 summary_results <- temp_results[!duplicated(apply(temp_results,1,function(x)
                                paste(sort(x),collapse=''))),]
 
-
 t2 <- t %>%
    filter(value != 0)
 mat_results <- t2 %>%
   group_by(Var1, Var2) %>%
   summarise(mean = mean(value),
             median = median(value),
-            mode = mode(value),
-            post_sd = sd(value),
-            psuedo_z = mean(value) / sd(value),
-            ev.ratio = sum(value > 0) / sum(value < 0),
-            lb_hdi = hdi(value, prob)[1],
-            ub_hdi = hdi(value, prob)[2],
-            lb_eq  = quantile(value, (1- prob)/ 2),
-            ub_eq  = quantile(value, 1 - ((1- prob)/ 2)))
-
-
+            mode = mode(value))
 
 mean_par <- matrix(mat_results$mean,  max(nodes))
 median_par <- matrix(mat_results$median,  max(nodes))
 mode_par <- matrix(mat_results$mode,  max(nodes))
-
 colnames(mean_par) <- colnames(x$stan_dat$X)
 colnames(median_par) <- colnames(x$stan_dat$X)
 colnames(mode_par) <- colnames(x$stan_dat$X)
 
-
 summary_results  <- subset(summary_results,  Var1 != Var2)
 
-
 the_list <- list(summary = data.frame(summary_results), matrices = list(mean_par = mean_par,
-     median_par = median_par, mode_par = mode_par), par_mat = par_cor, df_post = t1 )
+     median_par = median_par, mode_par = mode_par), par_mat = par_cor, df_post = t,
+     stan_dat = x$stan_dat$X)
 
 class(the_list) <- append(class(the_list),"partial_corr")
 return(the_list)
-
 }

@@ -8,6 +8,8 @@
 #' @import data.table
 #' @useDynLib bnets, .registration = TRUE
 
+x <- mod_1
+prior_scale <-
 partial_corr <- function(x, prior_scale, prob){
   nodes  <- 1:x$stan_dat$K
 
@@ -42,9 +44,8 @@ for(j in 1:length(n_samples)){
 t <- reshape2::melt(par_cor)
 
 #t$Var2 <- rep(colnames(x$stan_dat$X), each = max(nodes))
-
-t1  <- t %>%
-  filter(value != 0)
+#t1  <- t %>%
+ # filter(value != 0)
 
 if(!is.null(colnames(x$stan_dat$X))){
   t1 <- t %>% mutate(Var1 = rep(colnames(x$stan_dat$X), length(Var1) / max(nodes)))
@@ -54,6 +55,9 @@ if(!is.null(colnames(x$stan_dat$X))){
   t1$Var1 = rep(1:length(nodes), length(t$value) / max(nodes))
   t1$Var2 = rep(1:length(nodes), each = max(nodes))
 }
+
+t1  <- t1 %>%
+  filter(value != 0)
 
 temp_results <- t1 %>%
   group_by(Var1, Var2) %>%

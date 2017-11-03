@@ -10,7 +10,7 @@
 
 centrality_contrasts <- function(x, contrast_list, prob){
   df_cont <-   as_tibble(x[[2]])
-  l <- centrality_list
+  l <- contrast_list
   c_list <- list()
   for(i in 1:length(l)){
 
@@ -21,8 +21,8 @@ centrality_contrasts <- function(x, contrast_list, prob){
   c_list[[i]] <- dat_2 %>%
                  summarise(difference = mean(value - value.1),
                            post_sd = sd(value - value.1),
-                           low_hdi = hdi(value, prob)[1],
-                          up_hdi = hdi(value, prob)[2])
+                           low_hdi = hdi(value - value.1, prob)[1],
+                           up_hdi = hdi(value - value.1, prob)[2])
 
   }
 t <- (t(unlist(l)))

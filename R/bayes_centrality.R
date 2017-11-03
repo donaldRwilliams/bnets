@@ -13,7 +13,7 @@ bayes_centrality <- function(x, rule, scale, point_est_cent,
   if(!is(x, "partial_corr")){
     stop("x is not of class partial_corr")
   }
-temp <-  edge_decision_rule(x, rule,  point_est = point_est_edge, prob = prob_edge, cut_off)
+temp <-  edge_decision_rule(x, rule,  point_est = point_est_edge, prob = prob_edge, cutoff)
 m_temp <- as.numeric(temp > 0)
 m_temp2 <- matrix(m_temp, nrow(temp), nrow(temp))
 

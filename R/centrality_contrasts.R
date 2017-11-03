@@ -9,7 +9,8 @@
 
 
 centrality_contrasts <- function(x, contrast_list, prob){
-  df_cont <-   as_tibble(test[[2]])
+  df_cont <-   as_tibble(x[[2]])
+  l <- centrality_list
   c_list <- list()
   for(i in 1:length(l)){
 

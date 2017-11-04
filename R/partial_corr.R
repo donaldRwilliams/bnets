@@ -11,7 +11,7 @@
 partial_corr <- function(x, prior_scale, prob){
   nodes  <- 1:x$stan_dat$K
 
-  temp <- (x$iter * x$chains) / 2
+  temp <- (x$iter * x$chains)
   n_samples <- 1:temp
   list_beta <- list()
 

@@ -8,8 +8,6 @@
 #' @import data.table
 #' @useDynLib bnets, .registration = TRUE
 
-x <- mod_1
-prior_scale <-
 partial_corr <- function(x, prior_scale, prob){
   nodes  <- 1:x$stan_dat$K
 

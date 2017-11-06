@@ -11,6 +11,7 @@
 edge_decision_rule <- function(x, rule, point_est = NULL,  cut_off = NULL, prob = NULL){
 
   d_temp <- x$df_post
+  d_temp <- d_temp %>% filter(value != 0)
   nodes <-  length(unique(x$df_post$Var1))
 if(rule == "par_cor" && is.numeric(prob)){
   warning("HDI specificed for par_cor and is thus ignored")
